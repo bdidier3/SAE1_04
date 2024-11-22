@@ -39,7 +39,7 @@ def show_layout_maraicher():
 @app.route('/type-marche/show')
 def show_typemarche():
     mycursor = get_db().cursor()
-    sql = "SELECT * FROM type_marche ORDER BY Libelle_type_marché"
+    sql = "SELECT * FROM type_marche ORDER BY Libelle_type_marche"
     mycursor.execute(sql)
     typemarche = mycursor.fetchall()
     return render_template('typemarche/show_typemarche.html', typemarche=typemarche )
@@ -53,7 +53,7 @@ def valid_add_typemarche():
         mycursor = get_db().cursor()
         libelle = request.form.get('libelle', '')
         tuple_insert = (libelle,)
-        sql = "INSERT INTO type_marche (Libelle_type_marché) VALUES (%s);"
+        sql = "INSERT INTO type_marche (Libelle_type_marche) VALUES (%s);"
         mycursor.execute(sql, tuple_insert)
         get_db().commit()
         message = u'type ajouté , libellé :' + libelle
@@ -65,7 +65,7 @@ def delete_typemarche():
     mycursor = get_db().cursor()
     id_type_marche = request.form.get('id', '')
     tuple_delete = (id_type_marche,)
-    sql = "DELETE FROM type_marche WHERE id_type_marché = '%s';"
+    sql = "DELETE FROM type_marche WHERE id_type_marche = '%s';"
     mycursor.execute(sql, tuple_delete)
     get_db().commit()
     flash(u'un type de marché supprimé, id : ' + id_type_marche, 'alert-success')
@@ -75,7 +75,7 @@ def delete_typemarche():
 def edit_typemarche():
     mycursor = get_db().cursor()
     id_type_marche = request.form.get('id', '')
-    sql = "SELECT id, Libelle_type_marché FROM type_marche WHERE id_type_marché = '%s'"
+    sql = "SELECT id, Libelle_type_marche FROM type_marche WHERE id_type_marche = '%s'"
     mycursor.execute(sql, (id_type_marche,))
     typemarche = mycursor.fetchall()
     return render_template('typemarche/edit_typemarche.html', typemarche=typemarche)
@@ -86,7 +86,7 @@ def valid_edit_typemarche():
     libelle = request.form['libelle']
     id_type_marche = request.form.get('id', '')
     tuple_update = (id_type_marche, libelle)
-    sql = "UPDATE type_marche SET Libelle_type_marché = '%s' WHERE id_type_marché = '%s';"
+    sql = "UPDATE type_marche SET Libelle_type_marche = '%s' WHERE id_type_marche = '%s';"
     mycursor.execute(sql, tuple_update)
     get_db().commit()
     flash(u'type de marché modifié, id : ' + id_type_marche + "libelle : " + libelle , 'alert-success')
