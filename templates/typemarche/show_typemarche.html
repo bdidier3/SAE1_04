@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Affichage des Types de marchés</title>
+{% endblock %}
+
+{% block body %}
+    <div class="mid_show_h3">
+<h3>Types de marchés</h3>
+        </div>
+<div class="mid_show_btn">
+    <div class="btn-add">
+<a class="btn btn-primary" href="/ville/add">Ajouter un type de marché</a>&nbsp;
+    </div>
+    </div>
+    <br><br>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th><th>Libelle</th><th>Lieu</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if types_villes | length >= 1 %}
+        {% for ligne in types_villes %}
+           <tr>
+                  <td>{{ ligne.id }}</td>
+                  <td>{{ ligne.nomVille}}</td>
+                  <td>
+                      <a class="btn btn-primary" href="/ville/edit?id={{ ligne.id }}">editer</>
+                      <a class="btn btn-danger" href="/ville/delete?id={{ ligne.id }}" >suppri>
+                  </td>
+           </tr>
+        {% endfor %}
+    {% else %}
+            <tr>
+                  <td>
+                      Pas de villes
+                  </td>
+           </tr>
+    {% endif %}
+    </tbody>
+</table>
+{% endblock %}
