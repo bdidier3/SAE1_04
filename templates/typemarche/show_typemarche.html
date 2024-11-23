@@ -1,45 +1,47 @@
-{% extends 'layout.html' %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon"  href="{{ url_for('static', filename='iconeweb.ico') }}" />
 
-{% block title %}
-    <title>Affichage des Types de marchés</title>
-{% endblock %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='mes_styles.css') }}" >
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}" >
+    <title>Maraîcher</title>
+</head>
+<body>
 
-{% block body %}
-    <div class="mid_show_h3">
-<h3>Types de marchés</h3>
-        </div>
-<div class="mid_show_btn">
-    <div class="btn-add">
-<a class="btn btn-primary" href="/ville/add">Ajouter un type de marché</a>&nbsp;
-    </div>
-    </div>
-    <br><br>
+{#{{ typemarche }}#}
+<h1>listes des types de marchés<img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut"  /></h1>
 
-<table class="table">
-    <thead class="thead-dark">
+<a href="/type-marche/add" >ajouter un type de marché</a>
+
+{% if typemarche | length >= 1 %}
+    <table>
         <tr>
-            <th>ID</th><th>Libelle</th><th>Lieu</th>
+            <th>id</th><th>nom</th><th>Lieu</th>
         </tr>
-    </thead>
-    <tbody>
-    {% if types_villes | length >= 1 %}
-        {% for ligne in types_villes %}
-           <tr>
-                  <td>{{ ligne.id }}</td>
-                  <td>{{ ligne.nomVille}}</td>
-                  <td>
-                      <a class="btn btn-primary" href="/ville/edit?id={{ ligne.id }}">editer</>
-                      <a class="btn btn-danger" href="/ville/delete?id={{ ligne.id }}" >suppri>
-                  </td>
-           </tr>
-        {% endfor %}
-    {% else %}
+        {% for typemarches in typemarche %}
             <tr>
-                  <td>
-                      Pas de villes
+                {# commentaires : autre notation possible, on affiche un element du dictionnaire
+                <td>{{ typemarches['id'] }}</td><td>{{ typemarches['nom'] }}</td><td>{{ typemarches['groupe'] }}</td>
+            #}
+                <td>{{ typemarches.id_type_marche }}</td>
+                <td>{{ typemarches.Libelle_type_marche }}</td>
+                <td>{{ typemarches.id_lieu}}</td>
+                <td>
+                      <a href="/type-marche/edit?id={{ typemarches.id_type_marche }}">editer</a>&nbsp;
+                      <a href="/type-marche/delete?id={{ typemarches.id_type_marche }}" >supprimer</a>
                   </td>
-           </tr>
-    {% endif %}
-    </tbody>
-</table>
-{% endblock %}
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2> la liste des types de marchés est vide</h2>
+{% endif %}
+
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+</body>
+</html>

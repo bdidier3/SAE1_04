@@ -60,33 +60,51 @@ def valid_add_typemarche():
         flash(message, 'alert-success')
         return render_redirect('/type-marche/show')
 
-@app.route('/type-marche/delete', methods=['GET'])
-def delete_typemarche():
+
+@app.route('/etudiant/delete')
+def delete_etudiant():
+    print('''suppression d'un étudiant''')
+    print(request.args)
+    print(request.args.get('id'))
+    id=request.args.get('id')
+    #delete
     mycursor = get_db().cursor()
-    id_type_marche = request.form.get('id', '')
-    tuple_delete = (id_type_marche,)
-    sql = "DELETE FROM type_marche WHERE id_type_marche = '%s';"
-    mycursor.execute(sql, tuple_delete)
+    sql="DELETE FROM etudiant WHERE id_etudiant=%s;"
+    tuple_param=(id)
+    mycursor.execute(sql, tuple_param)
     get_db().commit()
-    flash(u'un type de marché supprimé, id : ' + id_type_marche, 'alert-success')
+    return redirect('/etudiant/show')
+
+@app.route('/type-marche/delete')
+def delete_typemarche():
+    print('''suppression d'un type de marché''')
+    print(request.args)
+    print(request.args.get('id'))
+    id = request.args.get('id')
+    # delete
+    mycursor = get_db().cursor()
+    sql = "DELETE FROM type_marche WHERE id_type_marche=%s;"
+    tuple_param = (id)
+    mycursor.execute(sql, tuple_param)  # Un tuple avec une virgule
+    get_db().commit()
     return redirect('/type-marche/show')
 
 @app.route('/type-marche/edit', methods=['GET'])
 def edit_typemarche():
     mycursor = get_db().cursor()
-    id_type_marche = request.form.get('id', '')
-    sql = "SELECT id, Libelle_type_marche FROM type_marche WHERE id_type_marche = '%s'"
+    id_type_marche = request.args.get('id', '')
+    sql = "SELECT id_type_marche, Libelle_type_marche FROM type_marche WHERE id_type_marche = %s"
     mycursor.execute(sql, (id_type_marche,))
-    typemarche = mycursor.fetchall()
-    return render_template('typemarche/edit_typemarche.html', typemarche=typemarche)
+    type_marche = mycursor.fetchone()  # Récupère une seule ligne sous forme de dictionnaire
+    return render_template('typemarche/edit_typemarche.html', type_marche=type_marche)
 
 @app.route('/type-marche/edit', methods=['POST'])
 def valid_edit_typemarche():
     mycursor = get_db().cursor()
     libelle = request.form['libelle']
     id_type_marche = request.form.get('id', '')
-    tuple_update = (id_type_marche, libelle)
-    sql = "UPDATE type_marche SET Libelle_type_marche = '%s' WHERE id_type_marche = '%s';"
+    tuple_update = (libelle, id_type_marche)
+    sql = "UPDATE type_marche SET Libelle_type_marche = %s WHERE id_type_marche = %s;"
     mycursor.execute(sql, tuple_update)
     get_db().commit()
     flash(u'type de marché modifié, id : ' + id_type_marche + "libelle : " + libelle , 'alert-success')
@@ -109,20 +127,6 @@ def show_etudiants():
 def add_etudiant():
     print('''affichage du formulaire pour saisir un étudiant''')
     return render_template('etudiant/add_etudiant.html')
-
-@app.route('/etudiant/delete')
-def delete_etudiant():
-    print('''suppression d'un étudiant''')
-    print(request.args)
-    print(request.args.get('id'))
-    id=request.args.get('id')
-    #delete
-    mycursor = get_db().cursor()
-    sql="DELETE FROM etudiant WHERE id_etudiant=%s;"
-    tuple_param=(id)
-    mycursor.execute(sql, tuple_param)
-    get_db().commit()
-    return redirect('/etudiant/show')
 
 @app.route('/etudiant/add', methods=['POST'])
 def valid_add_etudiant():
