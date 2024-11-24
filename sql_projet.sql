@@ -35,8 +35,8 @@ CREATE TABLE type_marche(
                             id_type_marche INT AUTO_INCREMENT,
                             Libelle_type_marche VARCHAR(50),
                             id_lieu INT NOT NULL,
-                            nombre_place INT,
-                            surface DECIMAL(10,2),
+                            nombre_place_type_marche INT,
+                            surface_type_marche DECIMAL(10,2),
                             PRIMARY KEY(id_type_marche),
                             FOREIGN KEY(id_lieu) REFERENCES Lieu(id_lieu)
 );
@@ -86,10 +86,10 @@ CREATE TABLE se_deroule(
                            FOREIGN KEY(id_jour) REFERENCES Jour_Semaine(id_jour)
 );
 
-INSERT INTO Lieu(id_lieu,Libelle_lieu) VALUES
-                                           (NULL,'Nices'),
-                                           (NULL,'Lyon'),
-                                           (NULL,'Brest');
+INSERT INTO Lieu(Libelle_lieu) VALUES
+                                           ('Nices'),
+                                           ('Lyon'),
+                                           ('Brest');
 
 INSERT INTO Saison(id_saison,libelle_saison) VALUES
                                                  (NULL,'ete'),
@@ -106,10 +106,10 @@ INSERT INTO Jour_Semaine(id_jour, libelle_jour) VALUES
                                                     (NULL,'Samedi'),
                                                     (NULL,'Dimanche');
 
-INSERT INTO type_marche(id_type_marche, Libelle_type_marche, id_lieu) VALUES
-                                                                          (NULL,'Wazemmes',  1),
-                                                                          (NULL,'Lices',  2),
-                                                                          (NULL,'Halles',  1);
+INSERT INTO type_marche(id_type_marche, Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche) VALUES
+                                                                          (NULL,'Wazemmes',  1, 2, 10.2),
+                                                                          (NULL,'Lices',  2, 5 , 84.2),
+                                                                          (NULL,'Halles',  1, 10 , 100.2);
 
 INSERT INTO Produit(id_produit,libelle_produit, prix_au_kilo, id_saison) VALUES
                                                                              (NULL,'Tomate', 5.5, 1),
@@ -161,3 +161,5 @@ FROM type_marche
          JOIN Quantitee_vendue on type_marche.id_type_marche = Quantitee_vendue.id_type_marche
          JOIN Produit on Quantitee_vendue.id_produit = Produit.id_produit
 WHERE se_deroule.id_jour = 2 and JJ_MM_AAAA='2024-12-24';
+
+SELECT nombre_place_type_marche FROM type_marche;

@@ -93,21 +93,31 @@ def delete_typemarche():
 def edit_typemarche():
     mycursor = get_db().cursor()
     id_type_marche = request.args.get('id', '')
-    sql = "SELECT id_type_marche, Libelle_type_marche FROM type_marche WHERE id_type_marche = %s"
+    sql = """
+        SELECT id_type_marche, Libelle_type_marche, nombre_place_type_marche, surface_type_marche, id_lieu 
+        FROM type_marche 
+        WHERE id_type_marche = %s
+        """
     mycursor.execute(sql, (id_type_marche,))
-    type_marche = mycursor.fetchone()  # Récupère une seule ligne sous forme de dictionnaire
-    return render_template('typemarche/edit_typemarche.html', type_marche=type_marche)
+    type_marche = mycursor.fetchone()
+    sql_lieux = "SELECT id_lieu, Libelle_lieu FROM Lieu"
+    mycursor.execute(sql_lieux)
+    lieux = mycursor.fetchall()
+    return render_template('typemarche/edit_typemarche.html', type_marche=type_marche, lieux=lieux)
 
 @app.route('/type-marche/edit', methods=['POST'])
 def valid_edit_typemarche():
     mycursor = get_db().cursor()
-    libelle = request.form['libelle']
+    Libelle_type_marche = request.form.get('Libelle_type_marche', '')
     id_type_marche = request.form.get('id', '')
-    tuple_update = (libelle, id_type_marche)
-    sql = "UPDATE type_marche SET Libelle_type_marche = %s WHERE id_type_marche = %s;"
+    id_lieu = request.form.get('id_lieu', '')
+    nombre_place_type_marche = request.form.get('nombre_place_type_marche', '')
+    surface_type_marche = request.form.get('surface_type_marche', '')
+    tuple_update = (Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche, id_type_marche)
+    sql = "UPDATE type_marche SET Libelle_type_marche = %s, id_lieu = %s, nombre_place_type_marche = %s, surface_type_marche = %s WHERE id_type_marche = %s;"
     mycursor.execute(sql, tuple_update)
     get_db().commit()
-    flash(u'type de marché modifié, id : ' + id_type_marche + "libelle : " + libelle , 'alert-success')
+    flash(u'type de marché modifié, id : ' + id_type_marche + "libelle : " + Libelle_type_marche + " id_lieu : " + id_lieu + "nombre de place : " + nombre_place_type_marche + "surface : " + surface_type_marche, 'alert-success')
     return redirect('/type-marche/show')
 
 

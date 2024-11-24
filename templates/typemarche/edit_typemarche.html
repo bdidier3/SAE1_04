@@ -11,35 +11,61 @@
     <div class="container mt-4">
         <h1>Formulaire de type de marché</h1>
         <form action="/type-marche/edit" method="post">
-            <!-- Champ caché pour l'ID -->
-            <input type="hidden" name="id_type_marche" value="{{ type_marche['id_type_marche'] }}">
+    <!-- Champ caché pour l'ID -->
+    <input type="hidden" name="id" value="{{ type_marche['id_type_marche'] }}">
 
-            <!-- Champ pour le Libellé -->
-            <div class="mb-3">
-                <label for="Libelle_type_marche" class="form-label">Nom du type de marché :</label>
-                <input type="text"
-                       class="form-control"
-                       id="Libelle_type_marche"
-                       placeholder="Entrez le nom du type de marché"
-                       required
-                       value="{{ type_marche['Libelle_type_marche'] }}"
-                       name="Libelle_type_marche">
-            </div>
+    <!-- Champ pour le Libellé -->
+    <div class="mb-3">
+        <label for="Libelle_type_marche" class="form-label">Nom du type de marché :</label>
+        <input type="text"
+               class="form-control"
+               id="Libelle_type_marche"
+               placeholder="Entrez le nom du type de marché"
+               required
+               value="{{ type_marche['Libelle_type_marche'] }}"
+               name="Libelle_type_marche">
+    </div>
 
+    <!-- Champ pour le Lieu -->
+    <div class="mb-3">
+        <label for="id_lieu" class="form-label">Lieu :</label>
+        <select name="id_lieu" id="id_lieu" class="form-select" required>
+            {% for lieu in lieux %}
+            <option value="{{ lieu['id_lieu'] }}"
+                {% if lieu['id_lieu'] == type_marche['id_lieu'] %}selected{% endif %}
+            >{{ lieu['Libelle_lieu'] }}</option>
+            {% endfor %}
+        </select>
+    </div>
 
-            <!-- Champ pour le Lieu -->
-            <div class="mb-3">
-                <label for="id_lieu" class="form-label">Lieu du type de marché :</label>
-                <select class="form-select" id="id_lieu" required name="id_lieu">
-                    <option value="A1" {% if type_marche['id_lieu'] == 'A1' %}selected{% endif %}>A1</option>
-                    <option value="A2" {% if type_marche['id_lieu'] == 'A2' %}selected{% endif %}>A2</option>
-                    <option value="B1" {% if type_marche['id_lieu'] == 'B1' %}selected{% endif %}>B1</option>
-                </select>
-            </div>
+    <!-- Champ pour le Nombre de places -->
+    <div class="mb-3">
+        <label for="nombre_place_type_marche" class="form-label">Nombre de places :</label>
+        <input type="text"
+               class="form-control"
+               id="nombre_place_type_marche"
+               placeholder="Entrez le nombre de places"
+               required
+               value="{{ type_marche['nombre_place_type_marche'] }}"
+               name="nombre_place_type_marche">
+    </div>
 
-            <!-- Bouton de soumission -->
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
-        </form>
+    <!-- Champ pour la surface -->
+    <div class="mb-3">
+        <label for="surface_type_marche" class="form-label">Surface (m²) :</label>
+        <input type="text"
+               class="form-control"
+               id="surface_type_marche"
+               placeholder="Entrez la surface"
+               required
+               value="{{ type_marche['surface_type_marche'] }}"
+               name="surface_type_marche">
+    </div>
+
+    <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+</form>
+
     </div>
 
     <!-- Inclure Bootstrap 5 JS (pour les fonctionnalités supplémentaires) -->

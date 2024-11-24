@@ -21,7 +21,7 @@
 {% if typemarche | length >= 1 %}
     <table>
         <tr>
-            <th>id</th><th>nom</th><th>Lieu</th>
+            <th>ID</th><th>Nom</th><th>Lieu</th><th>Nombre de places</th><th>Surface</th>
         </tr>
         {% for typemarches in typemarche %}
             <tr>
@@ -31,6 +31,8 @@
                 <td>{{ typemarches.id_type_marche }}</td>
                 <td>{{ typemarches.Libelle_type_marche }}</td>
                 <td>{{ typemarches.id_lieu}}</td>
+                <td>{{ typemarches.nombre_place_type_marche}}</td>
+                <td>{{ typemarches.surface_type_marche}}</td>
                 <td>
                       <a href="/type-marche/edit?id={{ typemarches.id_type_marche }}">editer</a>&nbsp;
                       <a href="/type-marche/delete?id={{ typemarches.id_type_marche }}" >supprimer</a>
