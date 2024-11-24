@@ -92,7 +92,7 @@ def delete_typemarche():
 @app.route('/type-marche/edit', methods=['GET'])
 def edit_typemarche():
     mycursor = get_db().cursor()
-    id_type_marche = request.args.get('id', '')
+    id_type_marche = request.args.get('id_type_marche', '')
     sql = """
         SELECT id_type_marche, Libelle_type_marche, nombre_place_type_marche, surface_type_marche, id_lieu 
         FROM type_marche 
@@ -109,7 +109,7 @@ def edit_typemarche():
 def valid_edit_typemarche():
     mycursor = get_db().cursor()
     Libelle_type_marche = request.form.get('Libelle_type_marche', '')
-    id_type_marche = request.form.get('id', '')
+    id_type_marche = request.form.get('id_type_marche', '')  # Utilisez form pour récupérer la valeur depuis le formulaire
     id_lieu = request.form.get('id_lieu', '')
     nombre_place_type_marche = request.form.get('nombre_place_type_marche', '')
     surface_type_marche = request.form.get('surface_type_marche', '')
