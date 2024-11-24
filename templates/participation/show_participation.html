@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="{{ url_for('static', filename='iconeweb.ico') }}" />
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='mes_styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <title>Participations</title>
+</head>
+<body>
+
+<h1>Liste des participations <img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut" /></h1>
+
+<a href="/participation/add">Ajouter une participation</a>
+
+{% if participations | length >= 1 %}
+    <table>
+        <tr>
+            <th>id</th><th>nom</th><th>groupe</th>
+        </tr>
+        {% for participation in participations %}
+            <tr>
+                <td>{{ participation.id_maraicher }}</td>
+                <td>{{ participation.date_participation }}</td>
+                <td>{{ participation.id_type_marche }}</td>
+                <td>{{ participation.id_duree }}</td>
+                <td>{{ participation.prix_place }}</td>
+                <td>
+                      <a href="/participation/edit?id={{ participation.id_maraicher }}">Éditer</a>&nbsp;
+                      <a href="/participation/delete?id={{ participation.id_maraicher }}">Supprimer</a>
+                  </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2>La liste des participations est vide</h2>
+{% endif %}
+
+<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
+</body>
+</html>

@@ -69,13 +69,15 @@ CREATE TABLE Quantitee_vendue(
                                 FOREIGN KEY(id_type_marche) REFERENCES type_marche(id_type_marche)
 );
 
-CREATE TABLE Participe(
-                          id_maraicher INT,
-                          JJ_MM_AAAA DATE,
-                          id_type_marche INT,
-                          PRIMARY KEY(id_maraicher, JJ_MM_AAAA, id_type_marche),
-                          FOREIGN KEY(id_maraicher) REFERENCES Maraicher(id_maraicher),
-                          FOREIGN KEY(id_type_marche) REFERENCES type_marche(id_type_marche)
+CREATE TABLE participation(
+   id_maraicher INT,
+   date_participation DATE,
+   id_type_marché INT,
+   duree VARCHAR(255),
+   prix_place NUMERIC,
+   PRIMARY KEY(id_maraicher, date_participation, id_type_marché),
+   FOREIGN KEY(id_maraicher) REFERENCES Maraicher(id_maraicher),
+   FOREIGN KEY(id_type_marché) REFERENCES type_marché(id_type_marché)
 );
 
 CREATE TABLE se_deroule(
