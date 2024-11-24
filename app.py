@@ -38,27 +38,51 @@ def show_layout_maraicher():
 
 @app.route('/type-marche/show')
 def show_typemarche():
+
     mycursor = get_db().cursor()
-    sql = "SELECT * FROM type_marche ORDER BY Libelle_type_marche"
+    sql = """SELECT typem.id_type_marche, typem.Libelle_type_marche, typem.nombre_place_type_marche, 
+               typem.surface_type_marche, lieu.id_lieu, lieu.Libelle_lieu
+        FROM type_marche typem
+        JOIN Lieu lieu ON typem.id_lieu = lieu.id_lieu
+    """
     mycursor.execute(sql)
     typemarche = mycursor.fetchall()
-    return render_template('typemarche/show_typemarche.html', typemarche=typemarche )
+
+    return render_template('typemarche/show_typemarche.html', typemarche=typemarche)
 
 @app.route('/type-marche/add', methods=['GET'])
 def add_typemarche():
-    return render_template('typemarche/add_typemarche.html')
+
+    mycursor = get_db().cursor()
+
+    sql = "SELECT * FROM type_marche ORDER BY id_type_marche"
+    mycursor.execute(sql)
+    type_marche = mycursor.fetchall()
+    print(type_marche)
+
+    sql = "SELECT * FROM Lieu ORDER BY id_lieu"
+    mycursor.execute(sql)
+    lieux = mycursor.fetchall()
+    print(lieux)
+
+    return render_template('typemarche/add_typemarche.html', type_marche=type_marche, lieux=lieux)
 
 @app.route('/type-marche/add', methods=['POST'])
 def valid_add_typemarche():
         mycursor = get_db().cursor()
-        libelle = request.form.get('libelle', '')
-        tuple_insert = (libelle,)
-        sql = "INSERT INTO type_marche (Libelle_type_marche) VALUES (%s);"
+
+        Libelle_type_marche = request.form.get('Libelle_type_marche', '')
+        id_type_marche = request.form.get('id_type_marche','')
+        id_lieu = request.form.get('id_lieu', '')
+        nombre_place_type_marche = request.form.get('nombre_place_type_marche', '')
+        surface_type_marche = request.form.get('surface_type_marche', '')
+        tuple_insert = (Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche)
+        sql = "INSERT INTO type_marche (Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche) VALUES (%s, %s, %s, %s);"
         mycursor.execute(sql, tuple_insert)
         get_db().commit()
-        message = u'type ajouté , libellé :' + libelle
+        message = u'type ajouté , libellé :' + Libelle_type_marche + 'id type_marche : ' + id_type_marche + ' nombre_place_type_marche : ' + nombre_place_type_marche + ' surface_type_marche' + surface_type_marche
         flash(message, 'alert-success')
-        return render_redirect('/type-marche/show')
+        return redirect('/type-marche/show')
 
 
 @app.route('/etudiant/delete')

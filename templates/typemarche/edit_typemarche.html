@@ -9,7 +9,7 @@
 </head>
 <body>
     <div class="container mt-4">
-        <h1>Formulaire de type de marché</h1>
+        <h1>Formulaire modification de type de marché</h1>
         <form action="/type-marche/edit" method="post">
     <!-- Champ caché pour l'ID -->
 <input type="hidden" name="id_type_marche" value="{{ type_marche['id_type_marche'] }}">
@@ -41,7 +41,7 @@
     <!-- Champ pour le Nombre de places -->
     <div class="mb-3">
         <label for="nombre_place_type_marche" class="form-label">Nombre de places :</label>
-        <input type="text"
+        <input type="number"
                class="form-control"
                id="nombre_place_type_marche"
                placeholder="Entrez le nombre de places"
@@ -53,7 +53,7 @@
     <!-- Champ pour la surface -->
     <div class="mb-3">
         <label for="surface_type_marche" class="form-label">Surface (m²) :</label>
-        <input type="text"
+        <input type="number"
                class="form-control"
                id="surface_type_marche"
                placeholder="Entrez la surface"

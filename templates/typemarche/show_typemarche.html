@@ -12,6 +12,7 @@
     <title>Maraîcher</title>
 </head>
 <body>
+{% include('_nav.html') %}
 
 {#{{ typemarche }}#}
 <h1>listes des types de marchés<img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut"  /></h1>
@@ -30,7 +31,11 @@
             #}
                 <td>{{ typemarches.id_type_marche }}</td>
                 <td>{{ typemarches.Libelle_type_marche }}</td>
-                <td>{{ typemarches.id_lieu}}</td>
+
+                <td>
+                    {{ typemarches.Libelle_lieu }}
+                </td>
+
                 <td>{{ typemarches.nombre_place_type_marche}}</td>
                 <td>{{ typemarches.surface_type_marche}}</td>
                 <td>
