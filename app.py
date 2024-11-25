@@ -31,12 +31,14 @@ def teardown_db(exception):
 
 @app.route('/')
 
+
+#PAGE DE BASE
 @app.route('/maraicher/layout')
 def show_layout_maraicher():
     return render_template('layout.html')
 
 
-
+#PAGE BAPTISTE (TYPE-MARCHE)
 @app.route('/type-marche/show')
 def show_typemarche():
 
@@ -212,6 +214,13 @@ def valid_edit_etudiant():
     get_db().commit()
     return redirect('/etudiant/show')
 
+
+
+
+
+
+
+#PAGE MATHIS (PARTICIPATION)
 @app.route('/participations/show')
 def show_participations():
     mycursor = get_db().cursor()
@@ -299,6 +308,13 @@ def valid_edit_participation():
     return redirect('/participations/show')
 
 
+
+
+
+
+
+
+#PAGE ANTOINE (VENTES)
 @app.route('/ventes/show')
 def show_ventes():
     mycursor = get_db().cursor()
