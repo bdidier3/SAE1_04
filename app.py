@@ -242,13 +242,13 @@ def add_participation():
 def delete_participation():
     print('Suppression d\'une participation')
     print(request.args)
-    print(request.args.get('id'))
-    id_participation = request.args.get('id')
+    print(request.args.get('id_participation'))
+    id_participation = request.args.get('id_participation')
     # Suppression
     mycursor = get_db().cursor()
     sql = "DELETE FROM participation WHERE id_maraicher=%s;"
-    tuple_param = (id_participation,)
-    mycursor.execute(sql, tuple_param)
+    tuple_delete = (id_participation,)
+    mycursor.execute(sql, tuple_delete)
     get_db().commit()
     return redirect('/participations/show')
 
@@ -283,24 +283,27 @@ def edit_participation():
             '''
     mycursor.execute(sql, (id_participation,))
     participation = mycursor.fetchone()
+    sql_maraicher = "SELECT id_maraicher, nom, prenom, age, numero, mail FROM Maraicher"
+    mycursor.execute(sql_maraicher)
     sql_type_marche = "SELECT id_type_marche, Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche FROM type_marche"
     mycursor.execute(sql_type_marche)
     type_marche = mycursor.fetchall()
-    return render_template('typemarche/edit_typemarche.html', participation=participation, type_marche=type_marche)
+    return render_template('typemarche/edit_typemarche.html', participation=participation, type_marche=type_marche, maraicher=Maraicher)
 
 @app.route('/participation/edit', methods=['POST'])
 def valid_edit_participation():
     mycursor = get_db().cursor()
+    id_participation = request.form.get('id_participation', '')
     id_maraicher = request.form.get('id_maraicher', '')
     date_participation = request.form.get('date_participation', '')
     id_type_marche = request.form.get('id_type_marche', '')
     duree = request.form.get('duree', '')
     prix_place = request.form.get('prix_place', '')
-    tuple_update = (id_maraicher, date_participation, id_type_marche, duree, prix_place)
+    tuple_update = (id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place)
     sql = '''
         UPDATE participation 
-        SET date_participation=%s, duree=%s, prix_place=%s 
-        WHERE id_maraicher=%s;
+        SET id_maraicher=%s, id_type_marche=%s, date_participation=%s, duree=%s, prix_place=%s 
+        WHERE id_participation=%s;
     '''
     mycursor.execute(sql, tuple_update)
     get_db().commit()

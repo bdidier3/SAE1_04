@@ -74,13 +74,13 @@ CREATE TABLE Quantitee_vendue(
 CREATE TABLE participation(
    id_participation INT AUTO_INCREMENT,
    id_maraicher INT,
-   id_type_marché INT,
+   id_type_marche INT,
    date_participation DATE,
    duree VARCHAR(255),
-   prix_place NUMERIC,
+   prix_place NUMERIC(10, 2),
    PRIMARY KEY(id_participation),
    FOREIGN KEY(id_maraicher) REFERENCES Maraicher(id_maraicher),
-   FOREIGN KEY(id_type_marché) REFERENCES type_marché(id_type_marché)
+   FOREIGN KEY(id_type_marche) REFERENCES type_marche(id_type_marche)
 );
 
 CREATE TABLE se_deroule(
