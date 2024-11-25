@@ -57,17 +57,19 @@ CREATE TABLE Produit(
 );
 
 CREATE TABLE Quantitee_vendue(
+                                id_vente INT AUTO_INCREMENT,
                                 id_maraicher INT,
                                 JJ_MM_AAAA DATE,
                                 id_produit INT,
                                 id_type_marche INT,
                                 quantitee DECIMAL(15,2),
                                 recette DECIMAL(15,2),
-                                PRIMARY KEY(id_maraicher, JJ_MM_AAAA, id_produit, id_type_marche),
+                                PRIMARY KEY(id_vente),
                                 FOREIGN KEY(id_maraicher) REFERENCES Maraicher(id_maraicher),
                                 FOREIGN KEY(id_produit) REFERENCES Produit(id_produit),
                                 FOREIGN KEY(id_type_marche) REFERENCES type_marche(id_type_marche)
 );
+
 
 CREATE TABLE participation(
    id_maraicher INT,

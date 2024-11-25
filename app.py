@@ -36,6 +36,7 @@ def show_layout_maraicher():
     return render_template('layout.html')
 
 
+
 @app.route('/type-marche/show')
 def show_typemarche():
 
@@ -305,6 +306,31 @@ def valid_edit_participation():
     get_db().commit()
     flash(u'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place, 'alert-success')
     return redirect('/participations/show')
+
+
+@app.route('/ventes/show')
+def show_ventes():
+    mycursor = get_db().cursor()
+    sql = "SELECT * FROM Quantitee_vendue ORDER BY id_maraicher"
+    mycursor.execute(sql)
+    ventes = mycursor.fetchall()
+    return render_template('ventes/show_ventes.html', ventes=ventes )
+
+@app.route('/ventes/delete', methods=['GET'])
+def delete_ventes():
+    mycursor = get_db().cursor()
+    id_vente = request.form.get('id', '')
+    tuple_delete = (id_vente,)
+    sql = "DELETE FROM Quantitee_vendue WHERE id_vente = %s ;"
+    mycursor.execute(sql, tuple_delete)
+    get_db().commit()
+    flash(u'une vente supprimé, id : ' + id_vente, 'alert-success')
+    return redirect('/ventes/show')
+
+@app.route('/ventes/add', methods=['GET'])
+def add_ventes():
+    print('Affichage du formulaire pour ajouter une vente')
+    return render_template('ventes/add_ventes.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

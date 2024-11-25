@@ -1,0 +1,50 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Affichage des Ventes</title>
+{% endblock %}
+
+{% block body %}
+    <div class="mid_show_h3">
+<h3>Ventes</h3>
+        </div>
+<div class="mid_show_btn">
+    <div class="btn-add">
+<a class="btn btn-primary" href="/ventes/add">Ajouter une vente</a>&nbsp;
+    </div>
+    </div>
+    <br><br>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID_maraicher</th><th>Date</th><th>ID_Produit</th><th>ID_Marché</th><th>Quantité</th><th>Recette</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if ventes | length >= 1 %}
+        {% for ligne in ventes %}
+           <tr>
+
+                  <td>{{ ligne.id_maraicher}}</td>
+                  <td>{{ ligne.JJ_MM_AAAA}}</td>
+                  <td>{{ ligne.id_produit}}</td>
+                  <td>{{ ligne.id_produit}}</td>
+                  <td>{{ ligne.quantitee}}</td>
+                  <td>{{ ligne.recette}}</td>
+                  <td>
+                      <a class="btn btn-primary" href="/ville/edit?id={{ ligne.id }}">editer</>
+                      <a class="btn btn-danger" href="/ventes/delete?id={{ ligne.id }}" >supprimer</>
+                  </td>
+           </tr>
+        {% endfor %}
+    {% else %}
+            <tr>
+                  <td>
+                      Pas de ventes
+                  </td>
+           </tr>
+    {% endif %}
+    </tbody>
+</table>
+{% endblock %}
