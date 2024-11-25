@@ -336,7 +336,12 @@ def valid_edit_participation():
 @app.route('/ventes/show')
 def show_ventes():
     mycursor = get_db().cursor()
-    sql = "SELECT * FROM Quantitee_vendue ORDER BY id_maraicher"
+    sql = ("""SELECT Maraicher.nom ,Quantitee_vendue.date_vente, type_marche.Libelle_type_marche, Produit.libelle_produit, Quantitee_vendue.quantitee
+           FROM Quantitee_vendue 
+           JOIN Maraicher ON Maraicher.id_maraicher = Quantitee_vendue.id_maraicher
+           JOIN type_marche ON type_marche.id_type_marche = Quantitee_vendue.id_type_marche
+           JOIN Produit ON Produit.id_produit = Quantitee_vendue.id_produit
+           ORDER BY Quantitee_vendue.id_maraicher""")
     mycursor.execute(sql)
     ventes = mycursor.fetchall()
     return render_template('ventes/show_ventes.html', ventes=ventes )
@@ -356,6 +361,45 @@ def delete_ventes():
 def add_ventes():
     print('Affichage du formulaire pour ajouter une vente')
     return render_template('ventes/add_ventes.html')
+
+
+@app.route('/ventes/edit', methods=['GET'])
+def edit_ventes():
+    mycursor = get_db().cursor()
+    id_vente = request.args.get('id_vente', '')
+    sql = """
+        SELECT id_vente, id_maraicher, date_vente, id_produit, id_type_marche, quantitee, recette 
+        FROM Quantitee_vendue 
+        WHERE id_type_marche = %s
+        """
+    mycursor.execute(sql, (id_vente,))
+    ventes = mycursor.fetchone()
+    sql_maraicher = "SELECT id_maraicher, nom FROM Maraicher"
+    mycursor.execute(sql_maraicher)
+    maraicher = mycursor.fetchone()
+    sql_produit = "SELECT id_produit, libelle_produit FROM Produit"
+    mycursor.execute(sql_produit)
+    produit = mycursor.fetchone()
+    sql_type_marche = "SELECT id_type_marche,Libelle_type_marche  FROM type_marche"
+    mycursor.execute(sql_type_marche)
+    type_marche = mycursor.fetchall()
+    return render_template('ventes/edit_ventes.html', ventes=ventes, maraicher=maraicher, type_marche=type_marche, produit=produit)
+
+@app.route('/ventes/edit', methods=['POST'])
+def valid_edit_ventes():
+    mycursor = get_db().cursor()
+    id_vente = request.form.get('id_vente', '')  # Utilisez form pour récupérer la valeur depuis le formulaire
+    id_maraicher = request.form.get('id_maraicher', '')
+    date_vente = request.form.get('date_vente', '')
+    id_type_marche = request.form.get('id_type_marche', '')
+    id_produit = request.form.get('id_produit', '')
+    quantitee = request.form.get('quantitee', '')
+    tuple_update = (id_maraicher, date_vente, id_produit, quantitee, id_vente)
+    sql = "UPDATE type_marche SET id_maraicher = %s, date_vente = %s, id_produit = %s, quantitee = %s WHERE id_vente = %s;"
+    mycursor.execute(sql, tuple_update)
+    get_db().commit()
+    flash(u'vente modifié, id : ' + id_vente + "id maraicher : " + id_maraicher + " date : " + date_vente + "id produit : " + id_produit + "quantitee : " + quantitee, 'alert-success')
+    return redirect('/ventes/show')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

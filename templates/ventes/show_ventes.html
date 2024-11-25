@@ -18,7 +18,7 @@
 <table class="table">
     <thead class="thead-dark">
         <tr>
-            <th>ID_maraicher</th><th>Date</th><th>ID_Produit</th><th>ID_Marché</th><th>Quantité</th><th>Recette</th>
+            <th>Maraicher</th><th>Date</th><th>Marché</th><th>Produit</th><th>Quantité</th>
         </tr>
     </thead>
     <tbody>
@@ -26,14 +26,13 @@
         {% for ligne in ventes %}
            <tr>
 
-                  <td>{{ ligne.id_maraicher}}</td>
-                  <td>{{ ligne.JJ_MM_AAAA}}</td>
-                  <td>{{ ligne.id_produit}}</td>
-                  <td>{{ ligne.id_produit}}</td>
+                  <td>{{ ligne.nom}}</td>
+                  <td>{{ ligne.date_vente}}</td>
+                  <td>{{ ligne.Libelle_type_marche}}</td>
+                  <td>{{ ligne.libelle_produit}}</td>
                   <td>{{ ligne.quantitee}}</td>
-                  <td>{{ ligne.recette}}</td>
                   <td>
-                      <a class="btn btn-primary" href="/ville/edit?id={{ ligne.id }}">editer</>
+                      <a class="btn btn-primary" href="/ventes/edit?id={{ ligne.id }}">editer</>
                       <a class="btn btn-danger" href="/ventes/delete?id={{ ligne.id }}" >supprimer</>
                   </td>
            </tr>

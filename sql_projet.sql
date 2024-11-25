@@ -1,6 +1,6 @@
 /*  mysql -u bdidier3 -p BDD_bdidier3_tp <  sql_projet.sql */
 DROP TABLE IF EXISTS se_deroule;
-DROP TABLE IF EXISTS Participe;
+DROP TABLE IF EXISTS participation;
 DROP TABLE IF EXISTS Quantitee_vendue;
 DROP TABLE IF EXISTS Produit;
 DROP TABLE IF EXISTS Jour_Semaine;
@@ -59,7 +59,7 @@ CREATE TABLE Produit(
 CREATE TABLE Quantitee_vendue(
                                 id_vente INT AUTO_INCREMENT,
                                 id_maraicher INT,
-                                JJ_MM_AAAA DATE,
+                                date_vente DATE,
                                 id_produit INT,
                                 id_type_marche INT,
                                 quantitee DECIMAL(15,2),
@@ -127,7 +127,7 @@ INSERT INTO Maraicher(id_maraicher, nom, prenom, age, numero, mail) VALUES
                                                                         (NULL,'Bernard', 'Michel', 56, '06 56 38 05 96', 'bernard.michel@gmail.com');
 
 
-INSERT INTO Quantitee_vendue(id_maraicher, JJ_MM_AAAA, id_produit, id_type_marche, quantitee, recette) VALUES
+INSERT INTO Quantitee_vendue(id_maraicher, date_vente, id_produit, id_type_marche, quantitee, recette) VALUES
                                                                                                          (1, '2024-12-23', 1, 1, 25.2, 12),
                                                                                                          (2, '2024-12-24', 2, 3, 18.2, 16.35),
                                                                                                          (1, '2024-12-24', 2, 2, 38.9, 22.35),
@@ -156,7 +156,7 @@ WHERE Saison.id_saison = 4;
 SELECT SUM(recette) AS 'Recette'
 FROM Quantitee_vendue
          JOIN Maraicher on Quantitee_vendue.id_maraicher = Maraicher.id_maraicher
-WHERE JJ_MM_AAAA = '2024-12-24' and nom='Dupont' ;
+WHERE date_vente = '2024-12-24' and nom='Dupont' ;
 
 # Renvoie les differents produits qui etait present le 12 dècembre 2024 dans les marches ayant lieu un mardi
 SELECT DISTINCT Produit.libelle_produit
@@ -165,6 +165,6 @@ FROM type_marche
          JOIN Jour_Semaine on se_deroule.id_jour = Jour_Semaine.id_jour
          JOIN Quantitee_vendue on type_marche.id_type_marche = Quantitee_vendue.id_type_marche
          JOIN Produit on Quantitee_vendue.id_produit = Produit.id_produit
-WHERE se_deroule.id_jour = 2 and JJ_MM_AAAA='2024-12-24';
+WHERE se_deroule.id_jour = 2 and date_vente='2024-12-24';
 
 SELECT nombre_place_type_marche FROM type_marche;
