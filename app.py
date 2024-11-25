@@ -216,7 +216,7 @@ def valid_edit_etudiant():
 def show_participations():
     mycursor = get_db().cursor()
     sql = '''
-        SELECT id_maraicher, date_participation, id_type_marche, duree, prix_place
+        SELECT id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place
         FROM participation
         ORDER BY id_maraicher DESC;
     '''
@@ -234,59 +234,50 @@ def delete_participation():
     print('Suppression d\'une participation')
     print(request.args)
     print(request.args.get('id'))
-    id = request.args.get('id')
+    id_participation = request.args.get('id')
     # Suppression
     mycursor = get_db().cursor()
     sql = "DELETE FROM participation WHERE id_maraicher=%s;"
-    tuple_param = (id,)
+    tuple_param = (id_participation,)
     mycursor.execute(sql, tuple_param)
     get_db().commit()
     return redirect('/participations/show')
 
 @app.route('/participation/add', methods=['POST'])
 def valid_add_participation():
-    print('Ajout de la participation dans la base de données')
-    id_maraicher = request.form.get('id_maraicher')
-    date_participation = request.form.get('date_participation')
-    id_type_marche = request.form.get('id_type_marche')
-    duree = request.form.get('duree')
-    prix_place = request.form.get('prix_place')
-    message = 'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place
-    print(message)
-    # Insertion
     mycursor = get_db().cursor()
+    id_participation = request.form.get('id_participation', '')
+    id_maraicher = request.form.get('id_maraicher', '')
+    id_type_marche = request.form.get('id_type_marche', '')
+    date_participation = request.form.get('date_participation', '')
+    duree = request.form.get('duree', '')
+    prix_place = request.form.get('prix_place', '')
     sql = '''
-        INSERT INTO participation (id_maraicher, date_participation, id_type_marche, duree, prix_place) 
-        VALUES (%s, %s, %s, %s, %s);
-    '''
-    tuple_param = (
-        request.form.get('id_maraicher'),
-        request.form.get('date_participation'),
-        request.form.get('id_type_marche'),
-        request.form.get('duree'),
-        request.form.get('prix_place')
-    )
-    mycursor.execute(sql, tuple_param)
+            INSERT INTO participation (id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place) 
+            VALUES (NULL, %s, %s, %s, %s, %s);
+        '''
+    mycursor.execute(sql, tuple_insert)
     get_db().commit()
+    message = u'id_participation :' + id_participation +'id_maraicher :' + id_maraicher +'id_type_marche :' + id_type_marche +'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place
+    flash(message, 'alert-success')
     return redirect('/participations/show')
+
 
 @app.route('/participation/edit', methods=['GET'])
 def edit_participation():
-    print('Affichage du formulaire pour modifier une participation')
-    id_maraicher = request.args.get('id_maraicher')
-    if id_maraicher is not None and id_maraicher.isnumeric():
-        indice = int(id_maraicher)
-        mycursor = get_db().cursor()
-        sql = '''
-            SELECT id_maraicher, date_participation, id_type_marche, duree, prix_place
-            FROM participation
-            WHERE id_maraicher=%s;
-        '''
-        mycursor.execute(sql, (id_maraicher,))
-        participation = mycursor.fetchone()
-    else:
-        participation = []
-    return render_template('participation/edit_participation.html', participation=participation)
+    mycursor = get_db().cursor()
+    id_participation = request.args.get('id_participation', '')
+    sql = '''
+                SELECT id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place
+                FROM participation
+                WHERE id_participation=%s;
+            '''
+    mycursor.execute(sql, (id_participation,))
+    participation = mycursor.fetchone()
+    sql_type_marche = "SELECT id_type_marche, Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche FROM type_marche"
+    mycursor.execute(sql_type_marche)
+    type_marche = mycursor.fetchall()
+    return render_template('typemarche/edit_typemarche.html', participation=participation, type_marche=type_marche)
 
 @app.route('/participation/edit', methods=['POST'])
 def valid_edit_participation():
