@@ -160,6 +160,21 @@ def show_etudiants():
     return render_template('etudiant/show_etudiants.html', etudiants=liste_etudiants )
 
 
+@app.route('/type-marche/etat')
+def show_etat():
+    mycursor = get_db().cursor()
+
+    sql_nb_place_total_tm = '''  '''
+    mycursor.execute(sql_nb_place_total_tm)
+    nb_place_total_tm = mycursor.fetchone()
+
+    sql_nb_surface_total_tm = '''  '''
+    mycursor.execute(sql_nb_surface_total_tm)
+    nb_surface_total_tm = mycursor.fetchone()
+
+
+    return render_template('etudiant/show_etat.html', nb_surface_total_tm=nb_surface_total_tm, etat=nb_place_total_tm)
+
 @app.route('/etudiant/add', methods=['GET'])
 def add_etudiant():
     print('''affichage du formulaire pour saisir un étudiant''')
