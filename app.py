@@ -245,17 +245,26 @@ def delete_participation():
 @app.route('/participation/add', methods=['POST'])
 def valid_add_participation():
     print('Ajout de la participation dans la base de données')
-    nom = request.form.get('nom')
-    groupe = request.form.get('groupe')
-    message = f'nom : {nom} - groupe : {groupe}'
+    id_maraicher = request.form.get('id_maraicher')
+    date_participation = request.form.get('date_participation')
+    id_type_marche = request.form.get('id_type_marche')
+    duree = request.form.get('duree')
+    prix_place = request.form.get('prix_place')
+    message = 'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place
     print(message)
     # Insertion
     mycursor = get_db().cursor()
     sql = '''
         INSERT INTO participation (id_maraicher, date_participation, id_type_marche, duree, prix_place) 
-        VALUES (NULL, %s, NULL, %s, %s);
+        VALUES (%s, %s, %s, %s, %s);
     '''
-    tuple_param = (nom, groupe)
+    tuple_param = (
+        request.form.get('id_maraicher'),
+        request.form.get('date_participation'),
+        request.form.get('id_type_marche'),
+        request.form.get('duree'),
+        request.form.get('prix_place')
+    )
     mycursor.execute(sql, tuple_param)
     get_db().commit()
     return redirect('/participations/show')
@@ -263,16 +272,16 @@ def valid_add_participation():
 @app.route('/participation/edit', methods=['GET'])
 def edit_participation():
     print('Affichage du formulaire pour modifier une participation')
-    id = request.args.get('id')
-    if id is not None and id.isnumeric():
-        indice = int(id)
+    id_maraicher = request.args.get('id_maraicher')
+    if id_maraicher is not None and id_maraicher.isnumeric():
+        indice = int(id_maraicher)
         mycursor = get_db().cursor()
         sql = '''
             SELECT id_maraicher, date_participation, id_type_marche, duree, prix_place
             FROM participation
             WHERE id_maraicher=%s;
         '''
-        mycursor.execute(sql, (id,))
+        mycursor.execute(sql, (id_maraicher,))
         participation = mycursor.fetchone()
     else:
         participation = []
@@ -280,22 +289,21 @@ def edit_participation():
 
 @app.route('/participation/edit', methods=['POST'])
 def valid_edit_participation():
-    print('Modification de la participation dans la base de données')
-    id = request.form.get('id')
-    nom = request.form.get('nom')
-    groupe = request.form.get('groupe')
-    message = f'nom : {nom} - groupe : {groupe} pour la participation avec l\'identifiant : {id}'
-    print(message)
-    # Mise à jour
     mycursor = get_db().cursor()
+    id_maraicher = request.form.get('id_maraicher', '')
+    date_participation = request.form.get('date_participation', '')
+    id_type_marche = request.form.get('id_type_marche', '')
+    duree = request.form.get('duree', '')
+    prix_place = request.form.get('prix_place', '')
+    tuple_update = (id_maraicher, date_participation, id_type_marche, duree, prix_place)
     sql = '''
         UPDATE participation 
         SET date_participation=%s, duree=%s, prix_place=%s 
         WHERE id_maraicher=%s;
     '''
-    tuple_param = (nom, groupe, id)
-    mycursor.execute(sql, tuple_param)
+    mycursor.execute(sql, tuple_update)
     get_db().commit()
+    flash(u'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place, 'alert-success')
     return redirect('/participations/show')
 
 if __name__ == '__main__':
