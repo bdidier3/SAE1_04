@@ -15,9 +15,7 @@
 {% include('_nav.html') %}
 
 {#{{ typemarche }}#}
-<h1>listes des types de marchés<img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut"  /></h1>
-
-<a href="/type-marche/add" >ajouter un type de marché</a>
+<h1>listes des types de marchés à supprimer</h1>
 
 {% if typemarche | length >= 1 %}
     <table>
@@ -39,15 +37,17 @@
                 <td>{{ typemarches.nombre_place_type_marche}}</td>
                 <td>{{ typemarches.surface_type_marche}}</td>
                 <td>
-                      <a href="/type-marche/edit?id_type_marche={{ typemarches.id_type_marche }}">editer</a>&nbsp;
-<!--                      <a href="/type-marche/delete?id={{ typemarches.id_type_marche }}" >supprimer</a>-->
-                      <a href="/type-marche/delete" >supprimer</a>
+                  <form action="/type-marche/delete" method="POST" style="display: inline">
+                       <input type="hidden" name="id_type_marche" value="{{ typemarches.id_type_marche }}">
+                       <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </form>
                   </td>
             </tr>
         {% endfor %}
     </table>
 {% else %}
     <h2> la liste des types de marchés est vide</h2>
+<a href="/type-marche/add" >ajouter un type de marché</a>
 {% endif %}
 
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>

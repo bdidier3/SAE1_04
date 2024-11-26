@@ -102,19 +102,45 @@ def delete_etudiant():
     get_db().commit()
     return redirect('/etudiant/show')
 
-@app.route('/type-marche/delete')
+@app.route('/type-marche/delete', methods=['GET'])
 def delete_typemarche():
-    print('''suppression d'un type de marché''')
-    print(request.args)
-    print(request.args.get('id'))
-    id = request.args.get('id')
-    # delete
     mycursor = get_db().cursor()
-    sql = "DELETE FROM type_marche WHERE id_type_marche=%s;"
-    tuple_param = (id)
-    mycursor.execute(sql, tuple_param)  # Un tuple avec une virgule
+
+    sql = """SELECT typem.id_type_marche, typem.Libelle_type_marche, typem.nombre_place_type_marche, 
+               typem.surface_type_marche, lieu.id_lieu, lieu.Libelle_lieu
+        FROM type_marche typem
+        JOIN Lieu lieu ON typem.id_lieu = lieu.id_lieu
+    """
+    mycursor.execute(sql)
+    typemarche = mycursor.fetchall()
+    return render_template('typemarche/delete_typemarche.html', typemarche=typemarche)
+@app.route('/type-marche/delete', methods=['POST'])
+def valid_delete_typemarche():
+    id_type_marche = request.form.get('id_type_marche', '')
+    mycursor = get_db().cursor()
+    sql_delete_se_deroule = """ DELETE FROM se_deroule WHERE id_type_marche = %s;"""
+    mycursor.execute(sql_delete_se_deroule, (id_type_marche,))
+
+    sql_delete_type_marche = """ DELETE FROM type_marche WHERE id_type_marche = %s;"""
+    mycursor.execute(sql_delete_type_marche, (id_type_marche,))
+
     get_db().commit()
-    return redirect('/type-marche/show')
+    return redirect('/type-marche/delete')
+
+
+# @app.route('/type-marche/delete', methods=['DELETE'])
+# def valid_delete_typemarche():
+#     print('''suppression d'un type de marché''')
+#     print(request.args)
+#     print(request.args.get('id'))
+#     id = request.args.get('id')
+#     # delete
+#     mycursor = get_db().cursor()
+#     sql = "DELETE FROM type_marche WHERE id_type_marche=%s;"
+#     tuple_param = (id)
+#     mycursor.execute(sql, tuple_param)  # Un tuple avec une virgule
+#    get_db().commit()
+#     return redirect('/type-marche/show')
 
 @app.route('/type-marche/edit', methods=['GET'])
 def edit_typemarche():
