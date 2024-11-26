@@ -118,6 +118,13 @@ def delete_typemarche():
 def valid_delete_typemarche():
     id_type_marche = request.form.get('id_type_marche', '')
     mycursor = get_db().cursor()
+
+    sql_del_fk_participation = """ DELETE FROM participation WHERE id_type_marche = %s;"""
+    mycursor.execute(sql_del_fk_participation, id_type_marche)
+
+    sql_del_qv = """ DELETE FROM Quantitee_vendue WHERE id_type_marche = %s;"""
+    mycursor.execute(sql_del_qv, (id_type_marche,))
+
     sql_delete_se_deroule = """ DELETE FROM se_deroule WHERE id_type_marche = %s;"""
     mycursor.execute(sql_delete_se_deroule, (id_type_marche,))
 
