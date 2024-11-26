@@ -387,6 +387,7 @@ def add_vente():
 
     return render_template('ventes/add_ventes.html', ventes=ventes, maraicher=maraicher, type_marche=type_marche, produit=produit)
 
+@app.route('/ventes/add', methods=['POST'])
 def valid_add_vente():
         mycursor = get_db().cursor()
 
@@ -397,7 +398,7 @@ def valid_add_vente():
         id_produit = request.form.get('id_produit', '')
         quantitee = request.form.get('quantitee', '')
         tuple_insert = (id_maraicher, date_vente, id_type_marche, id_produit, quantitee, id_vente)
-        sql = "INSERT INTO Quantitee_vendue (id_vente ,id_maraicher , date_vente , id_type_marche, id_produit, quantitee) VALUES (%s, %s, %s, %s, %s, %s);"
+        sql = "INSERT INTO Quantitee_vendue (id_maraicher , date_vente , id_type_marche, id_produit, quantitee) VALUES ( %s, %s, %s, %s, %s);"
         mycursor.execute(sql, tuple_insert)
         get_db().commit()
         message = u'type ajouté , id maraiche :' + id_maraicher+ 'date vente : ' + date_vente + ' id_type_marche : ' + id_type_marche + ' id_produit' + id_produit + ' quantitee: ' + quantitee
