@@ -87,21 +87,6 @@ def valid_add_typemarche():
         flash(message, 'alert-success')
         return redirect('/type-marche/show')
 
-
-@app.route('/etudiant/delete')
-def delete_etudiant():
-    print('''suppression d'un étudiant''')
-    print(request.args)
-    print(request.args.get('id'))
-    id=request.args.get('id')
-    #delete
-    mycursor = get_db().cursor()
-    sql="DELETE FROM etudiant WHERE id_etudiant=%s;"
-    tuple_param=(id)
-    mycursor.execute(sql, tuple_param)
-    get_db().commit()
-    return redirect('/etudiant/show')
-
 @app.route('/type-marche/delete', methods=['GET'])
 def delete_typemarche():
     mycursor = get_db().cursor()
@@ -135,19 +120,6 @@ def valid_delete_typemarche():
     return redirect('/type-marche/delete')
 
 
-# @app.route('/type-marche/delete', methods=['DELETE'])
-# def valid_delete_typemarche():
-#     print('''suppression d'un type de marché''')
-#     print(request.args)
-#     print(request.args.get('id'))
-#     id = request.args.get('id')
-#     # delete
-#     mycursor = get_db().cursor()
-#     sql = "DELETE FROM type_marche WHERE id_type_marche=%s;"
-#     tuple_param = (id)
-#     mycursor.execute(sql, tuple_param)  # Un tuple avec une virgule
-#    get_db().commit()
-#     return redirect('/type-marche/show')
 
 @app.route('/type-marche/edit', methods=['GET'])
 def edit_typemarche():
@@ -180,22 +152,18 @@ def valid_edit_typemarche():
     flash(u'type de marché modifié, id : ' + id_type_marche + "libelle : " + Libelle_type_marche + " id_lieu : " + id_lieu + "nombre de place : " + nombre_place_type_marche + "surface : " + surface_type_marche, 'alert-success')
     return redirect('/type-marche/show')
 
-
-@app.route('/etudiant/show')
-def show_etudiants():
-    mycursor = get_db().cursor()
-    sql = '''   SELECT id_etudiant AS id, nom_etudiant AS nom, groupe_etudiant AS groupe
-    FROM etudiant
-    ORDER BY nom DESC;      '''
-    mycursor.execute(sql)
-
-    liste_etudiants = mycursor.fetchall()
-    return render_template('etudiant/show_etudiants.html', etudiants=liste_etudiants )
-
-
-@app.route('/type-marche/etat')
+@app.route('/type-marche/etat', methods=["GET"])
 def show_etat():
+
     mycursor = get_db().cursor()
+
+    sql = """SELECT typem.id_type_marche, typem.Libelle_type_marche, typem.nombre_place_type_marche, 
+                   typem.surface_type_marche, lieu.id_lieu, lieu.Libelle_lieu
+            FROM type_marche typem
+            JOIN Lieu lieu ON typem.id_lieu = lieu.id_lieu
+        """
+    mycursor.execute(sql)
+    typemarche = mycursor.fetchall()
 
     sql_nb_place_total_tm = ''' SELECT
     SUM(nombre_place_type_marche) AS nb_place_tot,
@@ -203,71 +171,16 @@ def show_etat():
     COUNT(DISTINCT id_type_marche) AS type_marche_tot
 FROM
     type_marche; '''
+
     mycursor.execute(sql_nb_place_total_tm)
     nb_place_total_tm = mycursor.fetchone()
+
 
     sql_nb_surface_total_tm = ''' SELECT surface_type_marche, id_type_marche FROM type_marche '''
     mycursor.execute(sql_nb_surface_total_tm)
     nb_surface_total_tm = mycursor.fetchone()
 
-
-    return render_template('typemarche/etat_typemarche.html', nb_surface_total_tm=nb_surface_total_tm, etat=nb_place_total_tm)
-
-@app.route('/etudiant/add', methods=['GET'])
-def add_etudiant():
-    print('''affichage du formulaire pour saisir un étudiant''')
-    return render_template('etudiant/add_etudiant.html')
-
-@app.route('/etudiant/add', methods=['POST'])
-def valid_add_etudiant():
-    print('''ajout de l'étudiant dans le tableau''')
-    nom = request.form.get('nom')
-    groupe = request.form.get('groupe')
-    message = 'nom :' + nom + ' - groupe :' + groupe
-    print(message)
-    # insert
-    mycursor = get_db().cursor()
-    sql = '''INSERT INTO etudiant (id_etudiant, nom_etudiant, groupe_etudiant) 
-    VALUES (NULL, %s, %s);'''
-    tuple_param = (nom, groupe)
-    mycursor.execute(sql, tuple_param)
-    get_db().commit()
-    return redirect('/etudiant/show')
-
-@app.route('/etudiant/edit', methods=['GET'])
-def edit_etudiant():
-    print('''affichage du formulaire pour modifier un étudiant''')
-    print(request.args.get('id'))
-    id=request.args.get('id')
-    if id != None and id.isnumeric():
-        indice = int(id)
-        mycursor = get_db().cursor()
-        sql = '''   SELECT id_etudiant AS id, nom_etudiant AS nom, groupe_etudiant AS groupe
-           FROM etudiant
-           WHERE id_etudiant=%s;      '''
-        mycursor.execute(sql, (id))
-        etudiant = mycursor.fetchone()
-    else:
-        etudiant=[]
-    return render_template('etudiant/edit_etudiant.html', etudiant=etudiant)
-
-@app.route('/etudiant/edit', methods=['POST'])
-def valid_edit_etudiant():
-    print('''modification de l'étudiant dans le tableau''')
-    id = request.form.get('id')
-    nom = request.form.get('nom')
-    groupe = request.form.get('groupe')
-    message = 'nom :' + nom + ' - groupe :' + groupe + ' pour l etudiant d identifiant :' + id
-    print(message)
-    # insert
-    mycursor = get_db().cursor()
-    sql = '''UPDATE etudiant SET nom_etudiant =%s, groupe_etudiant=%s WHERE id_etudiant=%s;'''
-    tuple_param = (nom, groupe, id)
-    mycursor.execute(sql, tuple_param)
-    get_db().commit()
-    return redirect('/etudiant/show')
-
-
+    return render_template('typemarche/etat_typemarche.html', nb_surface_total_tm=nb_surface_total_tm, nb_place_total_tm=nb_place_total_tm, typemarche=typemarche)
 
 
 

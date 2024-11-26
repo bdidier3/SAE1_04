@@ -15,7 +15,35 @@
 {% include('_nav.html') %}
 
 {#{{ typemarche }}#}
-<h1>Etat des types de marchés<img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut"  /></h1>
+<h1>Etat des types de marchés</h1>
+
+<p>Sur les <strong>{{nb_place_total_tm.type_marche_tot}}</strong>, il y a <strong>{{nb_place_total_tm.nb_place_tot}}</strong> places au total, et il y a un total de surface de <strong>{{nb_place_total_tm.nb_surface_tot}}</strong> m2.<p>
+
+{% if typemarche | length >= 1 %}
+    <table>
+        <tr>
+            <th>ID</th><th>Nom</th><th>Lieu</th><th>Nombre de places</th><th>Surface</th>
+        </tr>
+        {% for typemarches in typemarche %}
+            <tr>
+                {# commentaires : autre notation possible, on affiche un element du dictionnaire
+                <td>{{ typemarches['id'] }}</td><td>{{ typemarches['nom'] }}</td><td>{{ typemarches['groupe'] }}</td>
+            #}
+                <td>{{ typemarches.id_type_marche }}</td>
+                <td>{{ typemarches.Libelle_type_marche }}</td>
+
+                <td>
+                    {{ typemarches.Libelle_lieu }}
+                </td>
+
+                <td>{{ typemarches.nombre_place_type_marche}}</td>
+                <td>{{ typemarches.surface_type_marche}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% else %}
+    <h2> la liste des types de marchés est vide</h2>
+{% endif %}
 
 
 
