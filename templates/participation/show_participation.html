@@ -12,6 +12,7 @@
     <title>Participations</title>
 </head>
 <body>
+{% include('_nav.html') %}
 
 <h1>Liste des participations <img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut" /></h1>
 
@@ -20,13 +21,13 @@
 {% if participations | length >= 1 %}
     <table>
         <tr>
-            <th>id</th><th>nom</th><th>groupe</th>
+            <th>Nom</th><th>Prénom</th><th>Marché</th><th>Date</th><th>Prix</th>
         </tr>
         {% for participation in participations %}
             <tr>
                 <td>{{ participation.id_maraicher }}</td>
-                <td>{{ participation.date_participation }}</td>
                 <td>{{ participation.id_type_marche }}</td>
+                <td>{{ participation.date_participation }}</td>
                 <td>{{ participation.id_duree }}</td>
                 <td>{{ participation.prix_place }}</td>
                 <td>

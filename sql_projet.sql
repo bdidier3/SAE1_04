@@ -135,6 +135,14 @@ INSERT INTO Quantitee_vendue(id_maraicher, date_vente, id_produit, id_type_march
                                                                                                          (2, '2024-12-22', 1, 1, 24.5, 29.4),
                                                                                                          (1, '2024-12-22', 3, 1, 22.5, 19.6);
 
+INSERT INTO participation(id_maraicher, id_type_marche, date_participation, duree, prix_place) VALUES
+                                                                                                         (1, 2, '2024-12-23', '1h00', 12.50),
+                                                                                                         (2, 1, '2024-06-12', '2h30', 16.35),
+                                                                                                         (1, 2, '2024-04-26', '1h30', 22.35),
+                                                                                                         (3, 3, '2024-01-16', '3h30',  23.35),
+                                                                                                         (2, 1, '2024-10-06', '2h00', 29.40),
+                                                                                                         (3, 3, '2024-09-11', '4h00', 19.60);
+
 INSERT INTO se_deroule(id_type_marche, id_jour) VALUES
                                                     (1,3),
                                                     (3,2);

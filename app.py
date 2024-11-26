@@ -240,10 +240,12 @@ def valid_edit_etudiant():
 def show_participations():
     mycursor = get_db().cursor()
     sql = '''
-        SELECT id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place
+        SELECT Maraicher.nom, Maraicher.prenom, type_marche.Libelle_type_marche, participation.date_participation, participation.duree, participation.prix_place
         FROM participation
-        ORDER BY id_maraicher DESC;
-    '''
+        JOIN Maraicher ON Maraicher.id_maraicher = participation.id_maraicher
+        JOIN type_marche ON type_marche.id_type_marche = participation.id_type_marche
+        ORDER BY participation.id_participation;
+        '''
     mycursor.execute(sql)
     participation = mycursor.fetchall()
     return render_template('participation/show_participation.html', participations=participation)
