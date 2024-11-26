@@ -14,10 +14,10 @@ import pymysql.cursors
 def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
-            host="localhost",                 # à modifier
-            user="bdidier3",                     # à modifier
+            host="serveurmysql.iut-bm.univ-fcomte.fr",                 # à modifier
+            user="mdemoly2",                     # à modifier
             password="mdp",                # à modifier
-            database="BDD_bdidier3_tp",        # à modifier
+            database="BDD_mdemoly2_tp",        # à modifier
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -245,8 +245,8 @@ def show_participations():
         ORDER BY id_maraicher DESC;
     '''
     mycursor.execute(sql)
-    liste_participations = mycursor.fetchall()
-    return render_template('participation/show_participations.html', participations=liste_participations)
+    participation = mycursor.fetchall()
+    return render_template('participation/show_participation.html', participations=participation)
 
 @app.route('/participation/add', methods=['GET'])
 def add_participation():
@@ -261,7 +261,7 @@ def delete_participation():
     id_participation = request.args.get('id_participation')
     # Suppression
     mycursor = get_db().cursor()
-    sql = "DELETE FROM participation WHERE id_maraicher=%s;"
+    sql = "DELETE FROM participation WHERE id_participation=%s;"
     tuple_delete = (id_participation,)
     mycursor.execute(sql, tuple_delete)
     get_db().commit()
@@ -276,6 +276,7 @@ def valid_add_participation():
     date_participation = request.form.get('date_participation', '')
     duree = request.form.get('duree', '')
     prix_place = request.form.get('prix_place', '')
+    tuple_insert = (id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place)
     sql = '''
             INSERT INTO participation (id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place) 
             VALUES (NULL, %s, %s, %s, %s, %s);
@@ -303,7 +304,7 @@ def edit_participation():
     sql_type_marche = "SELECT id_type_marche, Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche FROM type_marche"
     mycursor.execute(sql_type_marche)
     type_marche = mycursor.fetchall()
-    return render_template('typemarche/edit_typemarche.html', participation=participation, type_marche=type_marche, maraicher=Maraicher)
+    return render_template('participation/edit_participation.html', participation=participation, type_marche=type_marche, maraicher=Maraicher)
 
 @app.route('/participation/edit', methods=['POST'])
 def valid_edit_participation():
