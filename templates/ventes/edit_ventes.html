@@ -30,7 +30,7 @@
     <!-- Champ pour le Lieu -->
     <div class="mb-3">
         <label for="date" class="form-label">Date de vente :</label>
-        <input type="date"
+        <input type="text"
                class="form-control"
                id="date"
                placeholder="Entrez la date"
@@ -41,7 +41,7 @@
 
     <!-- Champ pour le Nombre de places -->
     <div class="mb-3">
-        <label for="id_type_marche" class="form-label">Maraicher :</label>
+        <label for="id_type_marche" class="form-label">Marché :</label>
         <select name="id_type_marche" id="id_type_marche" class="form-select" required>
             {% for marche in type_marche %}
             <option value="{{ type_marche['type_marche'] }}"
@@ -53,7 +53,7 @@
 
     <!-- Champ pour la surface -->
     <div class="mb-3">
-        <label for="id_produit" class="form-label">Maraicher :</label>
+        <label for="id_produit" class="form-label">Produit :</label>
         <select name="id_produit" id="id_produit" class="form-select" required>
             {% for prod in produit %}
             <option value="{{ prod['id_produit'] }}"
