@@ -164,16 +164,21 @@ def show_etudiants():
 def show_etat():
     mycursor = get_db().cursor()
 
-    sql_nb_place_total_tm = '''  '''
+    sql_nb_place_total_tm = ''' SELECT
+    SUM(nombre_place_type_marche) AS nb_place_tot,
+    SUM(surface_type_marche) AS nb_surface_tot,
+    COUNT(DISTINCT id_type_marche) AS type_marche_tot
+FROM
+    type_marche; '''
     mycursor.execute(sql_nb_place_total_tm)
     nb_place_total_tm = mycursor.fetchone()
 
-    sql_nb_surface_total_tm = '''  '''
+    sql_nb_surface_total_tm = ''' SELECT surface_type_marche, id_type_marche FROM type_marche '''
     mycursor.execute(sql_nb_surface_total_tm)
     nb_surface_total_tm = mycursor.fetchone()
 
 
-    return render_template('etudiant/show_etat.html', nb_surface_total_tm=nb_surface_total_tm, etat=nb_place_total_tm)
+    return render_template('typemarche/etat_typemarche.html', nb_surface_total_tm=nb_surface_total_tm, etat=nb_place_total_tm)
 
 @app.route('/etudiant/add', methods=['GET'])
 def add_etudiant():
