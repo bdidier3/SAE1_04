@@ -240,7 +240,7 @@ def valid_add_participation():
     mycursor = get_db().cursor()
     id_maraicher = request.form.get('id_maraicher') or None
     id_type_marche = request.form.get('id_type_marche') or None
-    date_participation = request.form.get('date_participation')
+    date_participation = request.form.get('date_participation') or None
     duree = request.form.get('duree') or None
     prix_place = request.form.get('prix_place') or None
     tuple_insert = (id_maraicher, id_type_marche, date_participation, duree, prix_place)
@@ -250,10 +250,7 @@ def valid_add_participation():
         '''
     mycursor.execute(sql, tuple_insert)
     get_db().commit()
-    message = u'id_maraicher :' + id_maraicher +'id_type_marche :' + id_type_marche +'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place
-    flash(message, 'alert-success')
     return redirect('/participations/show')
-
 
 @app.route('/participation/edit', methods=['GET'])
 def edit_participation():

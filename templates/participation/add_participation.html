@@ -14,20 +14,32 @@
             <!-- Champs pour saisir les informations de la participation -->
             <div class="mb-3">
                 <label for="id_maraicher" class="form-label">Nom :</label>
-                <input type="text" name="id_maraicher" id="id_maraicher" class="form-control" required
-                    value="{{ participation['nom'] }}" placeholder="Saisissez le nom du maraîcher">
+                <select name="id_maraicher" id="id_maraicher" required>
+                    <option value="">Sélectionner le nom de Maraicher</option>
+                        {% for mec in maraicher %}
+                    <option value="{{ mec.id_maraicher }}"> {{ mec.nom }} </option>
+                    {% endfor %}
+                </select>
             </div>
 
             <div class="mb-3">
                 <label for="id_maraicher" class="form-label">Prénom :</label>
-                <input type="text" name="id_maraicher" id="id_maraicher" class="form-control" required
-                    value="{{ participation['prenom'] }}" placeholder="Saisissez le prénom du maraîcher">
+                <select name="id_maraicher" id="id_maraicher" required>
+                    <option value="">Sélectionner le prenom du Maraicher</option>
+                        {% for mec in maraicher %}
+                    <option value="{{ mec.id_maraicher }}"> {{ mec.prenom }} </option>
+                    {% endfor %}
+                </select>
             </div>
 
             <div class="mb-3">
-                <label for="id_type_marche" class="form-label">Marché :</label>
-                <input type="text" name="id_type_marche" id="id_type_marche" class="form-control" required
-                    value="{{ participation['Libelle_type_marche'] }}" placeholder="Saisissez le marché">
+                <label for="id_type_marche" class="form-label">Prénom :</label>
+                <select name="id_type_marche" id="id_type_marche" required>
+                    <option value="">Sélectionner le marché</option>
+                        {% for mec in type_marche %}
+                    <option value="{{ mec.id_type_marche }}"> {{ mec.Libelle_type_marche }} </option>
+                    {% endfor %}
+                </select>
             </div>
 
             <div class="mb-3">
