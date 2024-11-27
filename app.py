@@ -391,5 +391,90 @@ def valid_edit_ventes():
     flash(u'vente modifié, id : ' + id_vente + "id maraicher : " + id_maraicher + " date : " + date_vente + "id produit : " + id_produit + "quantitee : " + quantitee, 'alert-success')
     return redirect('/ventes/show')
 
+#ETHAN PRODUIT
+
+
+@app.route('/produit/show')
+def show_produit():
+    mycursor = get_db().cursor()
+    sql = '''   SELECT id_produit AS id, libelle_produit AS nom, prix_au_kilo AS prix, id_saison AS id_saison
+    FROM Produit
+    ORDER BY nom DESC;      '''
+    mycursor.execute(sql)
+
+    produits = mycursor.fetchall()
+    return render_template('produit/show_produit.html', produit = produits )
+
+
+@app.route('/produit/add', methods=['GET'])
+def add_produit():
+    print('''affichage du formulaire pour enregistrer un produit''')
+    produit = {}  # Définir un dictionnaire vide ou les valeurs par défaut
+    return render_template('produit/add_produit.html', produit=produit)
+
+@app.route('/produit/add', methods=['POST'])
+def valid_add_produit():
+    print('''ajout de l'étudiant dans le tableau''')
+    nom = request.form.get('nom')
+    produit = request.form.get('produit')  # Récupérer la valeur du champ du formulaire
+    message = f'nom : {nom} - produit : {produit}'
+    print(message)
+    # insert
+    mycursor = get_db().cursor()
+    sql = '''INSERT INTO Produit (id_produit, libelle_produit) 
+    VALUES (NULL, %s);'''
+    tuple_param = (nom,)
+    mycursor.execute(sql, tuple_param)
+    get_db().commit()
+    return redirect('/produit/show')
+
+
+@app.route('/produit/edit', methods=['GET'])
+def edit_produit():
+    print('''affichage du formulaire pour modifier un étudiant''')
+    print(request.args.get('id'))
+    id=request.args.get('id')
+    if id != None and id.isnumeric():
+        indice = int(id)
+        mycursor = get_db().cursor()
+        sql = '''   SELECT id_etudiant AS id, nom_etudiant AS nom, groupe_etudiant AS groupe
+           FROM etudiant
+           WHERE id_etudiant=%s;      '''
+        mycursor.execute(sql, (id))
+        etudiant = mycursor.fetchone()
+    else:
+        etudiant=[]
+    return render_template('produit/edit_produit.html', etudiant=etudiant)
+
+@app.route('/produit/edit', methods=['POST'])
+def valid_edit_produit():
+    print('''modification de l'étudiant dans le tableau''')
+    id = request.form.get('id')
+    nom = request.form.get('nom')
+    groupe = request.form.get('groupe')
+    message = 'nom :' + nom + ' - groupe :' + groupe + ' pour l etudiant d identifiant :' + id
+    print(message)
+    # insert
+    mycursor = get_db().cursor()
+    sql = '''UPDATE etudiant SET nom_etudiant =%s, groupe_etudiant=%s WHERE id_etudiant=%s;'''
+    tuple_param = (nom, groupe, id)
+    mycursor.execute(sql, tuple_param)
+    get_db().commit()
+    return redirect('/produit/show')
+
+@app.route('/produit/delete', methods=['GET'])
+def delete_produit():
+    id = request.args.get('id', '')
+    message=u'Un produit supprimé, id : ' + id
+    flash(message, 'alert-warning')
+
+    mycursor = get_db().cursor()
+    sql = "DELETE FROM Produit WHERE id_produit=%s;"
+    tuple_param = (id)
+    mycursor.execute(sql, tuple_param)
+    get_db().commit()
+
+    return redirect(url_for('/produit/show'))
+
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

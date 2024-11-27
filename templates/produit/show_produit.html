@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Catégories de voitures</title>
+{% endblock %}
+
+{% block body %}
+<h3>Produits</h3>
+
+    <section class="titre">
+<a href="/produit/add">Ajouter un produit</a>
+    </section>
+
+<br><br>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>NOM</th>
+            <th>SAISON</th>
+            <th>PRIX</th>
+            <th>ACTIONS</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if produit | length >= 1 %}
+        {% for ligne in produit %}
+           <tr>
+                  <td>{{ ligne.id }}</td>
+                  <td>{{ ligne.nom }}</td>
+               <td>{{ ligne.id_saison }}</td>
+                  <td>{{ ligne.prix }} $</td>
+               <td>
+                      <a href="/produit/edit?id={{ ligne.id }}">editer</a>&nbsp;
+                      <a href="/produit/delete?id={{ ligne.id }}">supprimer</a>
+                  </td>
+           </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="3">Pas de produit</td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>
+{% endblock %}
