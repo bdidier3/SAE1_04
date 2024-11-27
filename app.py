@@ -14,10 +14,10 @@ import pymysql.cursors
 def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
-            host="serveurmysql.iut-bm.univ-fcomte.fr",                 # à modifier
-            user="mdemoly2",                     # à modifier
+            host="localhost",                 # à modifier
+            user="bdidier3",                     # à modifier
             password="mdp",                # à modifier
-            database="BDD_mdemoly2_tp",        # à modifier
+            database="BDD_bdidier3_tp",        # à modifier
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -222,28 +222,27 @@ def add_participation():
 
     return render_template('participation/add_participation.html', participation=participation, maraicher=maraicher, type_marche=type_marche)
 
-@app.route('/participation/delete')
+@app.route('/participation/delete', methods=['GET'])
 def delete_participation():
-    print('Suppression d\'une participation')
-    print(request.args)
-    print(request.args.get('id_participation'))
-    id_participation = request.args.get('id_participation')
+    id_participation = request.args.get('id_participation', '')
     # Suppression
     mycursor = get_db().cursor()
-    sql = "DELETE FROM participation WHERE id_participation=%s;"
     tuple_delete = (id_participation,)
+    sql = "DELETE FROM participation WHERE id_participation=%s;"
     mycursor.execute(sql, tuple_delete)
     get_db().commit()
+    message = u'id : ' + id_participation + ' deleted'
+    flash(message)
     return redirect('/participations/show')
 
 @app.route('/participation/add', methods=['POST'])
 def valid_add_participation():
     mycursor = get_db().cursor()
-    id_maraicher = request.form.get('id_maraicher', '')
-    id_type_marche = request.form.get('id_type_marche', '')
-    date_participation = request.form.get('date_participation', '')
-    duree = request.form.get('duree', '')
-    prix_place = request.form.get('prix_place', '')
+    id_maraicher = request.form.get('id_maraicher') or None
+    id_type_marche = request.form.get('id_type_marche') or None
+    date_participation = request.form.get('date_participation')
+    duree = request.form.get('duree') or None
+    prix_place = request.form.get('prix_place') or None
     tuple_insert = (id_maraicher, id_type_marche, date_participation, duree, prix_place)
     sql = '''
             INSERT INTO participation (id_maraicher, id_type_marche, date_participation, duree, prix_place) 
