@@ -21,18 +21,19 @@
 {% if participations | length >= 1 %}
     <table>
         <tr>
-            <th>Nom</th><th>Prénom</th><th>Marché</th><th>Date</th><th>Prix</th>
+            <th>Nom</th><th>Prénom</th><th>Marché</th><th>Date</th><th>Duree</th><th>Prix</th>
         </tr>
-        {% for participation in participations %}
+        {% for ligne in participations %}
             <tr>
-                <td>{{ participation.id_maraicher }}</td>
-                <td>{{ participation.id_type_marche }}</td>
-                <td>{{ participation.date_participation }}</td>
-                <td>{{ participation.id_duree }}</td>
-                <td>{{ participation.prix_place }}</td>
+                <td>{{ ligne.nom }}</td>
+                <td>{{ ligne.prenom }}</td>
+                <td>{{ ligne.Libelle_type_marche }}</td>
+                <td>{{ ligne.date_participation }}</td>
+                <td>{{ ligne.duree }}</td>
+                <td>{{ ligne.prix_place }}</td>
                 <td>
-                      <a href="/participation/edit?id={{ participation.id_maraicher }}">Éditer</a>&nbsp;
-                      <a href="/participation/delete?id={{ participation.id_maraicher }}">Supprimer</a>
+                      <a href="/participation/edit?id={{ ligne.id_participation }}">Éditer</a>&nbsp;
+                      <a href="/participation/delete?id={{ ligne.id_participation }}">Supprimer</a>
                   </td>
             </tr>
         {% endfor %}

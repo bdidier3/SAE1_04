@@ -14,10 +14,10 @@ import pymysql.cursors
 def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
-            host="localhost",                 # à modifier
-            user="bdidier3",                     # à modifier
+            host="serveurmysql.iut-bm.univ-fcomte.fr",                 # à modifier
+            user="mdemoly2",                     # à modifier
             password="mdp",                # à modifier
-            database="BDD_bdidier3_tp",        # à modifier
+            database="BDD_mdemoly2_tp",        # à modifier
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -198,13 +198,29 @@ def show_participations():
         ORDER BY participation.id_participation;
         '''
     mycursor.execute(sql)
-    participation = mycursor.fetchall()
-    return render_template('participation/show_participation.html', participations=participation)
+    participations = mycursor.fetchall()
+    return render_template('participation/show_participation.html', participations=participations)
 
 @app.route('/participation/add', methods=['GET'])
 def add_participation():
-    print('Affichage du formulaire pour saisir une participation')
-    return render_template('participation/add_participation.html')
+    mycursor = get_db().cursor()
+
+    sql = "SELECT * FROM participation ORDER BY id_participation"
+    mycursor.execute(sql)
+    participation = mycursor.fetchall()
+    print(participation)
+
+    sql = "SELECT * FROM Maraicher ORDER BY id_maraicher"
+    mycursor.execute(sql)
+    maraicher = mycursor.fetchall()
+    print(maraicher)
+
+    sql = "SELECT * FROM type_marche ORDER BY id_type_marche"
+    mycursor.execute(sql)
+    type_marche = mycursor.fetchall()
+    print(type_marche)
+
+    return render_template('participation/add_participation.html', participation=participation, maraicher=maraicher, type_marche=type_marche)
 
 @app.route('/participation/delete')
 def delete_participation():
@@ -223,20 +239,19 @@ def delete_participation():
 @app.route('/participation/add', methods=['POST'])
 def valid_add_participation():
     mycursor = get_db().cursor()
-    id_participation = request.form.get('id_participation', '')
     id_maraicher = request.form.get('id_maraicher', '')
     id_type_marche = request.form.get('id_type_marche', '')
     date_participation = request.form.get('date_participation', '')
     duree = request.form.get('duree', '')
     prix_place = request.form.get('prix_place', '')
-    tuple_insert = (id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place)
+    tuple_insert = (id_maraicher, id_type_marche, date_participation, duree, prix_place)
     sql = '''
-            INSERT INTO participation (id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place) 
-            VALUES (NULL, %s, %s, %s, %s, %s);
+            INSERT INTO participation (id_maraicher, id_type_marche, date_participation, duree, prix_place) 
+            VALUES (%s, %s, %s, %s, %s);
         '''
     mycursor.execute(sql, tuple_insert)
     get_db().commit()
-    message = u'id_participation :' + id_participation +'id_maraicher :' + id_maraicher +'id_type_marche :' + id_type_marche +'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place
+    message = u'id_maraicher :' + id_maraicher +'id_type_marche :' + id_type_marche +'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place
     flash(message, 'alert-success')
     return redirect('/participations/show')
 
@@ -246,18 +261,23 @@ def edit_participation():
     mycursor = get_db().cursor()
     id_participation = request.args.get('id_participation', '')
     sql = '''
-                SELECT id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place
-                FROM participation
-                WHERE id_participation=%s;
-            '''
+        SELECT id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place
+        FROM participation
+        WHERE id_participation=%s;
+    '''
     mycursor.execute(sql, (id_participation,))
     participation = mycursor.fetchone()
     sql_maraicher = "SELECT id_maraicher, nom, prenom, age, numero, mail FROM Maraicher"
     mycursor.execute(sql_maraicher)
-    sql_type_marche = "SELECT id_type_marche, Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche FROM type_marche"
+    maraicher = mycursor.fetchall()
+    sql_type_marche = '''
+        SELECT id_type_marche, Libelle_type_marche, id_lieu, nombre_place_type_marche, surface_type_marche 
+        FROM type_marche
+    '''
     mycursor.execute(sql_type_marche)
     type_marche = mycursor.fetchall()
-    return render_template('participation/edit_participation.html', participation=participation, type_marche=type_marche, maraicher=Maraicher)
+    return render_template(
+        'participation/edit_participation.html', participation=participation, type_marche=type_marche ,maraicher=maraicher)
 
 @app.route('/participation/edit', methods=['POST'])
 def valid_edit_participation():

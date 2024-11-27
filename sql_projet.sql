@@ -77,7 +77,7 @@ CREATE TABLE participation(
    id_type_marche INT,
    date_participation DATE,
    duree VARCHAR(255),
-   prix_place NUMERIC(10, 2),
+   prix_place DECIMAL(10, 2),
    PRIMARY KEY(id_participation),
    FOREIGN KEY(id_maraicher) REFERENCES Maraicher(id_maraicher),
    FOREIGN KEY(id_type_marche) REFERENCES type_marche(id_type_marche)

@@ -12,12 +12,46 @@
         <h1>Formulaire de Participation</h1>
         <form action="/participation/edit" method="post">
             <!-- Champs pour saisir les informations de la participation -->
-            <input type="hidden" name="id" value="{{ participation.id_maraicher }}" >
+            <input type="hidden" name="id" value="{{ participation['id_participation'] }}" >
+
+            <div class="mb-3">
+                <label for="id_maraicher" class="form-label">Nom :</label>
+                <select name="id_maraicher" id="id_maraicher" class="form-select" required>
+                    {% for maraiche in maraicher %}
+                    <option value="{{ maraiche['id_maraicher'] }}"
+                        {% if maraiche['id_maraicher'] == participation['id_maraicher'] %}selected{% endif %}
+                    >{{ maraiche['nom'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_maraicher" class="form-label">Prenom :</label>
+                <select name="id_maraicher" id="id_maraicher" class="form-select" required>
+                    {% for maraiche in maraicher %}
+                    <option value="{{ maraiche['id_maraicher'] }}"
+                        {% if maraiche['id_maraicher'] == participation['id_maraicher'] %}selected{% endif %}
+                    >{{ maraiche['prenom'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="id_type_marche" class="form-label">Marché :</label>
+                <select name="id_type_marche" id="id_type_marche" class="form-select">
+                    {% for marche in type_marche %}
+                    <option value="{{ type_marche['type_marche'] }}"
+                        {% if marche['id_type_marche'] == participation['id_type_marche'] %}selected{% endif %}
+                    >{{ marche['Libelle_type_marche'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
             <div class="mb-3">
                 <label for="date" class="form-label">Date de la participation :</label>
                 <input type="date" class="form-control" id="date" placeholder="Entrez la date de la participation" required value="{{ participation.date_participation }}" name="date">
             </div>
-            <input type="hidden" name="id" value="{{ participation.id_type_marche }}" >
+
             <div class="mb-3">
                 <label for="duree" class="form-label">Duree de la participation :</label>
                 <select class="form-select" id="duree" required name="duree">
@@ -31,10 +65,12 @@
                     <option value="4h00" {% if participation.duree == '4h00' %}selected{% endif %}>4h00</option>
                 </select>
             </div>
+
             <div class="mb-3">
                 <label for="prix" class="form-label">Prix de la place de participation :</label>
-                <input type="number" class="form-control" id="prix" placeholder="Entrez la prix de la place de participation" required value="{{ participation.prix_place }}" name="prix">
+                <input type="number" class="form-control" id="prix" placeholder="Entrez la prix de la place de participation" required value="{{ participation['prix_place'] }}" name="prix">
             </div>
+
             <button type="submit" class="btn btn-primary">Enregistrer</button>
         </form>
     </div>
