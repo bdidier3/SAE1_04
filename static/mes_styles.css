@@ -93,3 +93,19 @@
       display: flex;
     justify-content: center;
 }
+.titre_tm_show{
+  display: flex;
+  justify-content: center;
+}
+.btn btn-primary{
+  display: flex;
+  justify-content: center;
+}
+.btn_tm_show{
+  margin: 2%;
+  display: flex;
+  justify-content: center;
+}
+.div_tb_bootstrap{
+  margin: 5%;
+}

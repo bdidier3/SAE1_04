@@ -15,16 +15,27 @@
 {% include('_nav.html') %}
 
 {#{{ typemarche }}#}
-<h1>listes des types de marchés<img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut"  /></h1>
+<h1 class="titre_tm_show">Voici la liste des types de marchés : </h1>
 
-<a href="/type-marche/add" >ajouter un type de marché</a>
+<div class="btn_tm_show">
+<a href="/type-marche/add" class="btn btn-primary"><strong class="strong_tm_show">Ajouter un type de marché</strong></a>
+</div>
 
 {% if typemarche | length >= 1 %}
-    <table>
-        <tr>
-            <th>ID</th><th>Nom</th><th>Lieu</th><th>Nombre de places</th><th>Surface</th>
-        </tr>
-        {% for typemarches in typemarche %}
+<div class="div_tb_bootstrap">
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Nom</th>
+      <th scope="col">Lieu</th>
+      <th scope="col">Nombre de places</th>
+      <th scope="col">Surface (en m2)</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+     {% for typemarches in typemarche %}
             <tr>
                 {# commentaires : autre notation possible, on affiche un element du dictionnaire
                 <td>{{ typemarches['id'] }}</td><td>{{ typemarches['nom'] }}</td><td>{{ typemarches['groupe'] }}</td>
@@ -39,13 +50,15 @@
                 <td>{{ typemarches.nombre_place_type_marche}}</td>
                 <td>{{ typemarches.surface_type_marche}}</td>
                 <td>
-                      <a href="/type-marche/edit?id_type_marche={{ typemarches.id_type_marche }}">editer</a>&nbsp;
+                      <a href="/type-marche/edit?id_type_marche={{ typemarches.id_type_marche }}" class="btn btn-warning">editer</a>&nbsp;
 <!--                      <a href="/type-marche/delete?id={{ typemarches.id_type_marche }}" >supprimer</a>-->
-                      <a href="/type-marche/delete" >supprimer</a>
+                      <a href="/type-marche/delete" class="btn btn-danger">supprimer</a>
                   </td>
             </tr>
         {% endfor %}
-    </table>
+  </tbody>
+</table>
+    </div>
 {% else %}
     <h2> la liste des types de marchés est vide</h2>
 {% endif %}
