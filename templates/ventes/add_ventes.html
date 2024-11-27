@@ -15,7 +15,7 @@
 
     <div class="mb-3">
         <label for="id_maraicher" class="form-label">Lieu :</label>
-        <select name="id_lieu" id="id_maraicher" required>
+        <select name="id_maraicher" id="id_maraicher" required>
             <option value="">Sélectionner un Maraicher</option>
                 {% for mec in maraicher %}
             <option value="{{ mec.id_maraicher }}"> {{ mec.nom }} </option>

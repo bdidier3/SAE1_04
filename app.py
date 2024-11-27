@@ -316,23 +316,23 @@ def add_vente():
 
     mycursor = get_db().cursor()
 
-    sql = "SELECT * FROM Quantitee_vendue ORDER BY id_vente"
-    mycursor.execute(sql)
+    sql_qv = "SELECT * FROM Quantitee_vendue ORDER BY id_vente"
+    mycursor.execute(sql_qv)
     ventes = mycursor.fetchall()
     print(ventes)
 
-    sql = "SELECT * FROM Maraicher ORDER BY id_maraicher"
-    mycursor.execute(sql)
+    sql_m = "SELECT * FROM Maraicher ORDER BY id_maraicher"
+    mycursor.execute(sql_m)
     maraicher = mycursor.fetchall()
     print(maraicher)
 
-    sql = "SELECT * FROM type_marche ORDER BY id_type_marche"
-    mycursor.execute(sql)
+    sql_tm = "SELECT * FROM type_marche ORDER BY id_type_marche"
+    mycursor.execute(sql_tm)
     type_marche = mycursor.fetchall()
     print(type_marche)
 
-    sql = "SELECT * FROM Produit ORDER BY id_produit"
-    mycursor.execute(sql)
+    sql_prod = "SELECT * FROM Produit ORDER BY id_produit"
+    mycursor.execute(sql_prod)
     produit = mycursor.fetchall()
     print(produit)
 
@@ -342,18 +342,15 @@ def add_vente():
 def valid_add_vente():
         mycursor = get_db().cursor()
 
-        id_maraicher = request.form.get('id_maraicher', '')
-        id_vente = request.form.get('id_vente', '')
-        date_vente = request.form.get('date_vente', '')
-        id_type_marche = request.form.get('id_type_marche', '')
-        id_produit = request.form.get('id_produit', '')
-        quantitee = request.form.get('quantitee', '')
-        tuple_insert = (id_maraicher, date_vente, id_type_marche, id_produit, quantitee, id_vente)
+        id_maraicher = request.form.get('id_maraicher') or None
+        id_type_marche = request.form.get('id_type_marche') or None
+        id_produit = request.form.get('id_produit') or None
+        quantitee = request.form.get('quantitee') or None
+        date_vente = request.form.get('date_vente')
+        tuple_insert = (id_maraicher, date_vente, id_type_marche, id_produit, quantitee)
         sql = "INSERT INTO Quantitee_vendue (id_maraicher , date_vente , id_type_marche, id_produit, quantitee) VALUES ( %s, %s, %s, %s, %s);"
         mycursor.execute(sql, tuple_insert)
         get_db().commit()
-        message = u'type ajouté , id maraiche :' + id_maraicher+ 'date vente : ' + date_vente + ' id_type_marche : ' + id_type_marche + ' id_produit' + id_produit + ' quantitee: ' + quantitee
-        flash(message, 'alert-success')
         return redirect('/ventes/show')
 
 @app.route('/ventes/edit', methods=['GET'])
