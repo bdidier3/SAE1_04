@@ -290,7 +290,7 @@ def valid_edit_participation():
 @app.route('/ventes/show')
 def show_ventes():
     mycursor = get_db().cursor()
-    sql = ("""SELECT Maraicher.nom ,Quantitee_vendue.date_vente, type_marche.Libelle_type_marche, Produit.libelle_produit, Quantitee_vendue.quantitee
+    sql = ("""SELECT Quantitee_vendue.id_vente ,Maraicher.nom ,Quantitee_vendue.date_vente, type_marche.Libelle_type_marche, Produit.libelle_produit, Quantitee_vendue.quantitee
            FROM Quantitee_vendue 
            JOIN Maraicher ON Maraicher.id_maraicher = Quantitee_vendue.id_maraicher
            JOIN type_marche ON type_marche.id_type_marche = Quantitee_vendue.id_type_marche
@@ -302,13 +302,15 @@ def show_ventes():
 
 @app.route('/ventes/delete', methods=['GET'])
 def delete_ventes():
+
+    id_vente = request.args.get('id_vente','')
     mycursor = get_db().cursor()
-    id_vente = request.form.get('id', '')
     tuple_delete = (id_vente,)
     sql = "DELETE FROM Quantitee_vendue WHERE id_vente = %s ;"
     mycursor.execute(sql, tuple_delete)
     get_db().commit()
-    flash(u'une vente supprimé, id : ' + id_vente, 'alert-success')
+    message = u'id : ' + id_vente + ' deleted'
+    flash(message)
     return redirect('/ventes/show')
 
 @app.route('/ventes/add', methods=['GET'])
@@ -380,12 +382,12 @@ def valid_edit_ventes():
     mycursor = get_db().cursor()
     id_vente = request.form.get('id_vente', '')  # Utilisez form pour récupérer la valeur depuis le formulaire
     id_maraicher = request.form.get('id_maraicher', '')
-    date_vente = request.form.get('date_vente', '')
+    date_vente = request.form.get('date_vente')
     id_type_marche = request.form.get('id_type_marche', '')
     id_produit = request.form.get('id_produit', '')
     quantitee = request.form.get('quantitee', '')
-    tuple_update = (id_maraicher, date_vente,id_type_marche, id_produit, quantitee, id_vente)
-    sql = "UPDATE type_marche SET id_maraicher = %s, date_vente = %s,id_type_marche = %s, id_produit = %s, quantitee = %s WHERE id_vente = %s;"
+    tuple_update = (id_maraicher, date_vente,id_type_marche, id_produit, quantitee,id_vente)
+    sql = "UPDATE Quantitee_vendue SET id_maraicher = %s, date_vente = %s,id_type_marche = %s, id_produit = %s, quantitee = %s WHERE id_vente = %s;"
     mycursor.execute(sql, tuple_update)
     get_db().commit()
     flash(u'vente modifié, id : ' + id_vente + "id maraicher : " + id_maraicher + " date : " + date_vente + "id produit : " + id_produit + "quantitee : " + quantitee, 'alert-success')

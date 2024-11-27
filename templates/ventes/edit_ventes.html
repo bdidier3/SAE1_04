@@ -30,7 +30,7 @@
     <!-- Champ pour le Lieu -->
     <div class="mb-3">
         <label for="date" class="form-label">Date de vente :</label>
-        <input type="text"
+        <input type="date"
                class="form-control"
                id="date"
                placeholder="Entrez la date"
@@ -44,7 +44,7 @@
         <label for="id_type_marche" class="form-label">Marché :</label>
         <select name="id_type_marche" id="id_type_marche" class="form-select" required>
             {% for marche in type_marche %}
-            <option value="{{ type_marche['type_marche'] }}"
+            <option value="{{ marche['id_type_marche'] }}"
                 {% if marche['id_type_marche'] == ventes['id_type_marche'] %}selected{% endif %}
             >{{ marche['Libelle_type_marche'] }}</option>
             {% endfor %}
@@ -61,6 +61,17 @@
             >{{ prod['libelle_produit'] }}</option>
             {% endfor %}
         </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="quantitee" class="form-label">Quantite :</label>
+        <input type="number"
+               class="form-control"
+               id="quantitee"
+               placeholder="Entrez la quantitee"
+               required
+               value="{{ ventes['quantitee'] }}"
+               name="quantitee">
     </div>
 
     <!-- Bouton de soumission -->
