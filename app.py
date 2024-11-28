@@ -409,6 +409,46 @@ def valid_edit_ventes():
     flash(u'vente modifié, id : ' + id_vente + "id maraicher : " + id_maraicher + " date : " + date_vente + "id produit : " + id_produit + "quantitee : " + quantitee, 'alert-success')
     return redirect('/ventes/show')
 
+@app.route('/ventes/etat', methods=["GET"])
+def show_etat_ventes():
+
+    mycursor = get_db().cursor()
+
+    sql_v = """SELECT Quantitee_vendue.id_vente ,Maraicher.nom ,Quantitee_vendue.date_vente, type_marche.Libelle_type_marche, Produit.libelle_produit, Quantitee_vendue.quantitee
+           FROM Quantitee_vendue 
+           JOIN Maraicher ON Maraicher.id_maraicher = Quantitee_vendue.id_maraicher
+           JOIN type_marche ON type_marche.id_type_marche = Quantitee_vendue.id_type_marche
+           JOIN Produit ON Produit.id_produit = Quantitee_vendue.id_produit
+           ORDER BY Quantitee_vendue.id_maraicher
+        """
+    mycursor.execute(sql_v)
+    ventes = mycursor.fetchall()
+
+    sql_p = """  SELECT id_produit AS id, libelle_produit AS nom, prix_au_kilo AS prix, id_saison AS id_saison
+    FROM Produit
+    ORDER BY nom DESC; 
+            """
+    mycursor.execute(sql_p)
+    produit = mycursor.fetchall()
+
+    sql_prix_total = ''' 
+    SELECT q.id_vente,p.libelle_produit,p.prix_au_kilo,q.quantitee,sum(p.prix_au_kilo * q.quantitee) AS prix_total_calcule,sum(q.quantitee) as nb_quantitee
+    FROM Quantitee_vendue q
+    JOIN Produit p ON q.id_produit = p.id_produit; '''
+
+    mycursor.execute(sql_prix_total)
+    nb_prix_total = mycursor.fetchone()
+
+
+    sql_nb_ventes = ''' SELECT count(id_vente) as nb_de_ventes FROM Quantitee_vendue '''
+    mycursor.execute(sql_nb_ventes)
+    nb_ventes = mycursor.fetchone()
+
+    return render_template('ventes/etat_ventes.html', ventes=ventes, nb_prix_total=nb_prix_total, nb_ventes=nb_ventes, produit=produit)
+
+
+
+
 #ETHAN PRODUIT
 
 
