@@ -378,10 +378,10 @@ def edit_ventes():
     sql = """
         SELECT id_vente, id_maraicher, date_vente, id_produit, id_type_marche, quantitee, recette 
         FROM Quantitee_vendue 
-        WHERE id_type_marche = %s
+        WHERE id_vente = %s
         """
     mycursor.execute(sql, (id_vente,))
-    ventes = mycursor.fetchall()
+    ventes = mycursor.fetchone()
     sql_maraicher = "SELECT id_maraicher, nom FROM Maraicher"
     mycursor.execute(sql_maraicher)
     maraicher = mycursor.fetchall()
