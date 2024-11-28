@@ -12,7 +12,7 @@
         <h1>Formulaire de Participation</h1>
         <form action="/participation/edit" method="post">
             <!-- Champs pour saisir les informations de la participation -->
-            <input type="hidden" name="id" value="{{ participation['id_participation'] }}" >
+            <input type="hidden" name="id_participation" value="{{ participation['id_participation'] }}" >
 
             <div class="mb-3">
                 <label for="id_maraicher" class="form-label">Nom :</label>
@@ -71,7 +71,8 @@
                 <input type="number" class="form-control" id="prix_place" placeholder="Entrez la prix de la place de participation" required value="{{ participation['prix_place'] }}" name="prix_place">
             </div>
 
-            <button type="submit" class="btn btn-primary">Enregistrer</button>
+            <!-- Bouton de soumission -->
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
         </form>
     </div>
 

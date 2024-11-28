@@ -14,14 +14,18 @@
 <body>
 {% include('_nav.html') %}
 
-<h1>Liste des participations <img src="{{ url_for('static', filename='image_iut.jpeg') }}" alt="image iut" /></h1>
+{#{{ participation }}#}
+<h1 class="titre_tm_show">Voici la liste des participations : </h1>
 
-<a href="/participation/add">Ajouter une participation</a>
+<div class="btn_tm_show">
+<a href="/participation/add" class="btn btn-primary"><strong class="strong_tm_show">Ajouter une participation</a>
+</div>
 
 {% if participations | length >= 1 %}
-    <table>
+<div class="div_tb_bootstrap">
+    <table class="table table-dark">
         <tr>
-            <th>Nom</th><th>Prénom</th><th>Marché</th><th>Date</th><th>Duree</th><th>Prix</th>
+            <th>Nom</th><th>Prénom</th><th>Marché</th><th>Date</th><th>Duree</th><th>Prix</th><th>Actions</th>
         </tr>
         {% for ligne in participations %}
             <tr>
@@ -32,7 +36,7 @@
                 <td>{{ ligne.duree }}</td>
                 <td>{{ ligne.prix_place }}</td>
                 <td>
-                    <a class="btn btn-primary" href="/participation/edit?id_participation={{ ligne.id_participation }}">éditer</a>
+                    <a class="btn btn-warning" href="/participation/edit?id_participation={{ ligne.id_participation }}">éditer</a>
                     <a class="btn btn-danger" href="/participation/delete?id_participation={{ ligne.id_participation }}">supprimer</a>
                 </td>
             </tr>

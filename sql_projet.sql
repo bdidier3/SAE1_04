@@ -174,5 +174,3 @@ FROM type_marche
          JOIN Quantitee_vendue on type_marche.id_type_marche = Quantitee_vendue.id_type_marche
          JOIN Produit on Quantitee_vendue.id_produit = Produit.id_produit
 WHERE se_deroule.id_jour = 2 and date_vente='2024-12-24';
-
-SELECT nombre_place_type_marche FROM type_marche;
