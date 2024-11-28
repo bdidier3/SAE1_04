@@ -18,9 +18,9 @@
 <h1>Etat des ventes</h1>
 
 <p>Sur les <strong>{{nb_ventes.nb_de_ventes}}</strong>ventes, il y a <strong>{{nb_prix_total.nb_quantitee}}</strong> kilo de fruits et legumes vendu, et il y a une recette total de <strong>{{nb_prix_total.prix_total_calcule}}</strong> €.<p>
-
+<div class="div_tb_bootstrap">
 {% if ventes | length >= 1 %}
-    <table>
+    <table class="table table-dark">
         <tr>
             <th>Maraicher</th><th>Date</th><th>Marché</th><th>Produit</th><th>Quantité</th>
         </tr>
@@ -37,10 +37,11 @@
 {% else %}
     <h2> la liste des ventes est vide</h2>
 {% endif %}
+</div>
 
-
+<div class="div_tb_bootstrap">
 {% if produit | length >= 1 %}
-    <table>
+    <table class="table table-dark">
         <tr>
             <th>ID</th><th>NOM</th><th>SAISON</th><th>PRIX</th>
         </tr>
@@ -56,7 +57,7 @@
 {% else %}
     <h2> la liste des produit est vide</h2>
 {% endif %}
-
+</div>
 
 
 

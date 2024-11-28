@@ -14,11 +14,11 @@
     </div>
     </div>
     <br><br>
-
-<table class="table">
+<div class="div_tb_bootstrap">
+<table class="table table-dark">
     <thead class="thead-dark">
         <tr>
-            <th>Maraicher</th><th>Date</th><th>Marché</th><th>Produit</th><th>Quantité</th>
+            <th>Maraicher</th><th>Date</th><th>Marché</th><th>Produit</th><th>Quantité</th><th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -32,8 +32,8 @@
                   <td>{{ ligne.libelle_produit}}</td>
                   <td>{{ ligne.quantitee}} kg</td>
                   <td>
-                      <a class="btn btn-primary" href="/ventes/edit?id_vente={{ ligne.id_vente }}">editer</>
-                      <a class="btn btn-danger" href="/ventes/delete?id_vente={{ ligne.id_vente }}" >supprimer</>
+                      <a class="btn btn-warning" href="/ventes/edit?id_vente={{ ligne.id_vente }}">editer</a>
+                      <a class="btn btn-danger" href="/ventes/delete?id_vente={{ ligne.id_vente }}" >supprimer</a>
                   </td>
            </tr>
         {% endfor %}
@@ -47,3 +47,4 @@
     </tbody>
 </table>
 {% endblock %}
+</div>

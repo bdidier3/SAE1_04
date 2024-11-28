@@ -18,9 +18,9 @@
 <h1>Etat des types de marchés</h1>
 
 <p>Sur les <strong>{{nb_place_total_tm.type_marche_tot}}</strong>, il y a <strong>{{nb_place_total_tm.nb_place_tot}}</strong> places au total, et il y a un total de surface de <strong>{{nb_place_total_tm.nb_surface_tot}}</strong> m2.<p>
-
+<div class="div_tb_bootstrap">
 {% if typemarche | length >= 1 %}
-    <table>
+    <table class="table table-dark">
         <tr>
             <th>ID</th><th>Nom</th><th>Lieu</th><th>Nombre de places</th><th>Surface</th>
         </tr>
@@ -44,7 +44,7 @@
 {% else %}
     <h2> la liste des types de marchés est vide</h2>
 {% endif %}
-
+</div>
 
 
 
