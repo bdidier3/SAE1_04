@@ -46,6 +46,8 @@
                id="nombre_place_type_marche"
                placeholder="Entrez le nombre de places"
                required
+               min="0"
+               step="1"
                value="{{ type_marche['nombre_place_type_marche'] }}"
                name="nombre_place_type_marche">
     </div>
@@ -58,6 +60,8 @@
                id="surface_type_marche"
                placeholder="Entrez la surface"
                required
+               min="0"
+               step="0.01"
                value="{{ type_marche['surface_type_marche'] }}"
                name="surface_type_marche">
     </div>

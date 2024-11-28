@@ -15,7 +15,7 @@
 
     <div class="mb-3">
         <label for="id_maraicher" class="form-label">Lieu :</label>
-        <select name="id_maraicher" id="id_maraicher" required>
+        <select name="id_maraicher" id="id_maraicher" class="form-select" required>
             <option value="">Sélectionner un Maraicher</option>
                 {% for mec in maraicher %}
             <option value="{{ mec.id_maraicher }}"> {{ mec.nom }} </option>
@@ -38,7 +38,7 @@
     <!-- Champ pour le Nombre de places -->
     <div class="mb-3">
         <label for="id_type_marche" class="form-label">Marche :</label>
-        <select name="id_type_marche" id="id_type_marche" required>
+        <select name="id_type_marche" id="id_type_marche" class="form-select" required>
             <option value="">Sélectionner un Marche</option>
                 {% for marche in type_marche %}
             <option value="{{ marche.id_type_marche }}"> {{ marche.Libelle_type_marche }} </option>
@@ -48,7 +48,7 @@
 
     <div class="mb-3">
         <label for="id_produit" class="form-label">Produit :</label>
-        <select name="id_produit" id="id_produit" required>
+        <select name="id_produit" id="id_produit" class="form-select" required>
             <option value="">Sélectionner un Produit</option>
                 {% for prod in produit %}
             <option value="{{ prod.id_produit }}"> {{ prod.libelle_produit }} </option>
@@ -63,6 +63,8 @@
                class="form-control"
                id="quantitee"
                placeholder="Entrez la surface"
+               min="0"
+               step="0.01"
                required
                value="{{ ventes['quantitee'] }}"
                name="quantitee">
