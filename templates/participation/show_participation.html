@@ -32,9 +32,9 @@
                 <td>{{ ligne.duree }}</td>
                 <td>{{ ligne.prix_place }}</td>
                 <td>
-                      <a href="/participation/edit?id={{ ligne.id_participation }}">Éditer</a>&nbsp;
-                      <a href="/participation/delete?id={{ ligne.id_participation }}">Supprimer</a>
-                  </td>
+                    <a class="btn btn-primary" href="/participation/edit?id_participation={{ ligne.id_participation }}">éditer</a>
+                    <a class="btn btn-danger" href="/participation/delete?id_participation={{ ligne.id_participation }}">supprimer</a>
+                </td>
             </tr>
         {% endfor %}
     </table>

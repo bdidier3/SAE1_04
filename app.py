@@ -14,10 +14,10 @@ import pymysql.cursors
 def get_db():
     if 'db' not in g:
         g.db =  pymysql.connect(
-            host="localhost",                 # à modifier
-            user="bdidier3",                     # à modifier
+            host="serveurmysql.iut-bm.univ-fcomte.fr",                 # à modifier
+            user="mdemoly2",                     # à modifier
             password="mdp",                # à modifier
-            database="BDD_bdidier3_tp",        # à modifier
+            database="BDD_mdemoly2_tp",        # à modifier
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor
         )
@@ -191,7 +191,7 @@ FROM
 def show_participations():
     mycursor = get_db().cursor()
     sql = '''
-        SELECT Maraicher.nom, Maraicher.prenom, type_marche.Libelle_type_marche, participation.date_participation, participation.duree, participation.prix_place
+        SELECT participation.id_participation, Maraicher.nom, Maraicher.prenom, type_marche.Libelle_type_marche, participation.date_participation, participation.duree, participation.prix_place
         FROM participation
         JOIN Maraicher ON Maraicher.id_maraicher = participation.id_maraicher
         JOIN type_marche ON type_marche.id_type_marche = participation.id_type_marche
@@ -275,16 +275,17 @@ def edit_participation():
     return render_template(
         'participation/edit_participation.html', participation=participation, type_marche=type_marche ,maraicher=maraicher)
 
+
 @app.route('/participation/edit', methods=['POST'])
 def valid_edit_participation():
     mycursor = get_db().cursor()
     id_participation = request.form.get('id_participation', '')
     id_maraicher = request.form.get('id_maraicher', '')
-    date_participation = request.form.get('date_participation', '')
     id_type_marche = request.form.get('id_type_marche', '')
+    date_participation = request.form.get('date_participation', '')
     duree = request.form.get('duree', '')
     prix_place = request.form.get('prix_place', '')
-    tuple_update = (id_participation, id_maraicher, id_type_marche, date_participation, duree, prix_place)
+    tuple_update = (id_maraicher, id_type_marche, date_participation, duree, prix_place, id_participation)
     sql = '''
         UPDATE participation 
         SET id_maraicher=%s, id_type_marche=%s, date_participation=%s, duree=%s, prix_place=%s 
@@ -292,10 +293,9 @@ def valid_edit_participation():
     '''
     mycursor.execute(sql, tuple_update)
     get_db().commit()
-    flash(u'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place, 'alert-success')
+    flash(u'date_participation :' + date_participation + ' - duree :' + duree + ' - prix_place :' + prix_place,
+          'alert-success')
     return redirect('/participations/show')
-
-
 
 
 
