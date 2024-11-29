@@ -16,10 +16,10 @@
 
 <p>Sur un total de <strong>{{ totals.total_produits }}</strong> produit(s), le prix total des produits est de <strong>{{ totals.total_prix }}</strong> euros,
    et le prix moyen des produits est de <strong>{{ totals.prix_moyen }}</strong> euros.</p>
-
+<div class="div_tb_bootstrap">
 {% if produit_rentable %}
     <h2>Le produit le plus rentable :</h2>
-    <table class="table">
+    <table class="table table-dark">
         <thead>
             <tr>
                 <th>ID</th>
@@ -38,7 +38,7 @@
 {% else %}
     <p>Aucun produit n'a encore généré de recette.</p>
 {% endif %}
-
+</div>
 <script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>
 </body>
 </html>
