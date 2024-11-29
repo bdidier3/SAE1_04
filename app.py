@@ -466,13 +466,15 @@ def show_etat_ventes():
 
 #ETHAN PRODUIT
 
+#ETHAN PRODUIT
 
 @app.route('/produit/show')
 def show_produit():
     mycursor = get_db().cursor()
-    sql = '''   SELECT id_produit AS id, libelle_produit AS nom, prix_au_kilo AS prix, id_saison AS id_saison
+    id_saison = request.form.get('id_saison')
+    sql = '''   SELECT id_produit AS id_produit, libelle_produit AS libelle_produit, prix_au_kilo AS prix_au_kilo, id_saison AS id_saison
     FROM Produit
-    ORDER BY nom DESC;      '''
+    ORDER BY id_produit DESC;      '''
     mycursor.execute(sql)
 
     produits = mycursor.fetchall()
@@ -481,73 +483,166 @@ def show_produit():
 
 @app.route('/produit/add', methods=['GET'])
 def add_produit():
-    print('''affichage du formulaire pour enregistrer un produit''')
-    produit = {}  # Définir un dictionnaire vide ou les valeurs par défaut
-    return render_template('produit/add_produit.html', produit=produit)
+
+    mycursor = get_db().cursor()
+    sql = '''SELECT id_saison, libelle_saison FROM Saison'''
+    mycursor.execute(sql)
+    saisons = mycursor.fetchall()
+    prix = mycursor.fetchall()
+    produit = {}
+    return render_template('produit/add_produit.html', produit=produit, saisons=saisons, prix = prix)
+
+
 
 @app.route('/produit/add', methods=['POST'])
 def valid_add_produit():
-    print('''ajout de l'étudiant dans le tableau''')
-    nom = request.form.get('nom')
-    produit = request.form.get('produit')  # Récupérer la valeur du champ du formulaire
-    message = f'nom : {nom} - produit : {produit}'
-    print(message)
+    print('''ajout du produit dans le tableau''')
+    nom = request.form.get('libelle_produit')
+    id_saison = request.form.get('id_saison')
+    prix = request.form.get('prix')
+    print(f'nom : {nom} - id_saison : {id_saison}')
+
+
+
+
     # insert
     mycursor = get_db().cursor()
-    sql = '''INSERT INTO Produit (id_produit, libelle_produit) 
-    VALUES (NULL, %s);'''
-    tuple_param = (nom,)
+    sql = '''INSERT INTO Produit (id_produit, libelle_produit, id_saison, prix_au_kilo) 
+    VALUES (NULL, %s, %s, %s);'''
+    tuple_param = (nom, id_saison, prix)
     mycursor.execute(sql, tuple_param)
     get_db().commit()
+
     return redirect('/produit/show')
 
 
 @app.route('/produit/edit', methods=['GET'])
 def edit_produit():
-    print('''affichage du formulaire pour modifier un étudiant''')
-    print(request.args.get('id'))
-    id=request.args.get('id')
-    if id != None and id.isnumeric():
-        indice = int(id)
+    id = request.args.get('id_produit')
+    if id and id.isnumeric():
         mycursor = get_db().cursor()
-        sql = '''   SELECT id_etudiant AS id, nom_etudiant AS nom, groupe_etudiant AS groupe
-           FROM etudiant
-           WHERE id_etudiant=%s;      '''
-        mycursor.execute(sql, (id))
-        etudiant = mycursor.fetchone()
+
+
+        produit_sql = '''
+            SELECT id_produit, libelle_produit, id_saison, prix_au_kilo
+            FROM Produit
+            WHERE id_produit = %s
+        '''
+        mycursor.execute(produit_sql, (id,))
+        produit = mycursor.fetchone()
+
+
+        saisons_sql = 'SELECT id_saison, libelle_saison FROM Saison'
+        mycursor.execute(saisons_sql)
+        saisons = mycursor.fetchall()
+
+
+        print("Produit récupéré :", produit)
+        print("Saisons récupérées :", saisons)
     else:
-        etudiant=[]
-    return render_template('produit/edit_produit.html', etudiant=etudiant)
+        produit = None
+        saisons = []
+
+    return render_template('produit/edit_produit.html', produit=produit, saisons=saisons)
+
 
 @app.route('/produit/edit', methods=['POST'])
 def valid_edit_produit():
-    print('''modification de l'étudiant dans le tableau''')
-    id = request.form.get('id')
-    nom = request.form.get('nom')
-    groupe = request.form.get('groupe')
-    message = 'nom :' + nom + ' - groupe :' + groupe + ' pour l etudiant d identifiant :' + id
-    print(message)
-    # insert
+    print('Modification du produit dans le tableau')
+
+
+    id = request.form.get('id_produit')
+    nom = request.form.get('libelle_produit')
+    groupe = request.form.get('id_saison')
+    prix = request.form.get('prix_au_kilo')
+
+
     mycursor = get_db().cursor()
-    sql = '''UPDATE etudiant SET nom_etudiant =%s, groupe_etudiant=%s WHERE id_etudiant=%s;'''
-    tuple_param = (nom, groupe, id)
+    sql = '''UPDATE Produit 
+             SET libelle_produit = %s, id_saison = %s, prix_au_kilo = %s 
+             WHERE id_produit = %s;'''
+
+
+    tuple_param = (nom, groupe, prix, id)
+
+
     mycursor.execute(sql, tuple_param)
     get_db().commit()
+
+
     return redirect('/produit/show')
+
 
 @app.route('/produit/delete', methods=['GET'])
 def delete_produit():
-    id = request.args.get('id', '')
-    message=u'Un produit supprimé, id : ' + id
-    flash(message, 'alert-warning')
-
     mycursor = get_db().cursor()
-    sql = "DELETE FROM Produit WHERE id_produit=%s;"
-    tuple_param = (id)
-    mycursor.execute(sql, tuple_param)
-    get_db().commit()
 
-    return redirect(url_for('/produit/show'))
+    sql = """SELECT prod.id_produit, prod.libelle_produit, prod.prix_au_kilo, prod.id_saison
+        FROM Produit prod
+        JOIN Saison saison ON prod.id_saison = saison.id_saison 
+        ORDER BY id_produit DESC; """
+    mycursor.execute(sql)
+    produit = mycursor.fetchall()
+    return render_template('produit/delete_produit.html', produit=produit)
+
+
+
+@app.route('/produit/delete', methods=['POST'])
+def valid_delete_produit():
+    id_produit = request.form.get('id_produit', '')
+    mycursor = get_db().cursor()
+
+
+    sql_del_qv = """ 
+    DELETE FROM Quantitee_vendue WHERE id_produit = %s;
+    """
+    mycursor.execute(sql_del_qv, (id_produit,))
+
+
+    sql_del_produit = """ 
+    DELETE FROM Produit WHERE id_produit = %s;
+    """
+    mycursor.execute(sql_del_produit, (id_produit,))
+
+    get_db().commit()
+    return redirect('/produit/delete')
+
+
+
+@app.route('/produit/etat', methods=["GET"])
+def etat_produit():
+    mycursor = get_db().cursor()
+
+
+    sql_totals = """
+    SELECT 
+        COUNT(*) AS total_produits,
+        SUM(prix_au_kilo) AS total_prix,
+        AVG(prix_au_kilo) AS prix_moyen
+    FROM 
+        Produit;
+    """
+    mycursor.execute(sql_totals)
+    totals = mycursor.fetchone()
+
+
+    sql_rentable = """
+  SELECT 
+    Produit.libelle_produit, 
+    SUM(COALESCE(Quantitee_vendue.quantitee, 0) * COALESCE(Produit.prix_au_kilo, 0)) AS recette_totale
+FROM 
+    Quantitee_vendue
+JOIN 
+    Produit ON Quantitee_vendue.id_produit = Produit.id_produit
+GROUP BY 
+    Produit.libelle_produit
+ORDER BY 
+    recette_totale DESC;
+    """
+    mycursor.execute(sql_rentable)
+    produit_rentable = mycursor.fetchone()
+
+    return render_template('produit/etat_produit.html', totals=totals, produit_rentable=produit_rentable)
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
